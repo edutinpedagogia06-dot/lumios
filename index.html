@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sensy — Accesibilidad para todos</title>
+  <meta name="description" content="Sensy es una extensión gratuita de Chrome con 14 herramientas de accesibilidad para necesidades visuales, cognitivas, auditivas y motrices."/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+CiAgPGRlZnM+CiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3ciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjU1MDAiIHN0b3Atb3BhY2l0eT0iMC4zIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGNTUwMCIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iYmx1ci1nbG93Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIgcmVzdWx0PSJibHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYmx1ciIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCiAgPCEtLSBGb25kbyBPTEVEIC0tPgogIDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiByeD0iNDAiIGZpbGw9IiMwMDAwMDAiLz4KCiAgPCEtLSBSZXNwbGFuZG9yIGRlIGZvbmRvIC0tPgogIDxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iODAiIGZpbGw9InVybCgjZ2xvdykiLz4KCiAgPCEtLSBPam8gZXh0ZXJpb3IgKGFjY2VzaWJpbGlkYWQgdmlzdWFsKSAtLT4KICA8ZWxsaXBzZSBjeD0iMTAwIiBjeT0iOTUiIHJ4PSI1NSIgcnk9IjMyIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjU1MDAiIHN0cm9rZS13aWR0aD0iMy41IiBmaWx0ZXI9InVybCgjYmx1ci1nbG93KSIvPgoKICA8IS0tIFB1cGlsYSAtLT4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI5NSIgcj0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNTUwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iOTUiIHI9IjgiIGZpbGw9IiNGRjU1MDAiLz4KCiAgPCEtLSBSZWZsZWpvIGVuIGVsIG9qbyAtLT4KICA8Y2lyY2xlIGN4PSIxMDgiIGN5PSI4OCIgcj0iMyIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC43Ii8+CgogIDwhLS0gTMOtbmVhcyBkZSBhY2Nlc2liaWxpZGFkIChvbmRhcyBzb25vcmFzIC8gc2XDsWFsKSAtLT4KICA8cGF0aCBkPSJNIDMwIDEzMCBRIDEwMCAxNDUgMTcwIDEzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkY1NTAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgb3BhY2l0eT0iMC41Ii8+CiAgPHBhdGggZD0iTSA0NSAxNDMgUSAxMDAgMTU1IDE1NSAxNDMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNTUwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgNSIgb3BhY2l0eT0iMC4zIi8+CgogIDwhLS0gVGV4dG8gU0VOU1kgLS0+CiAgPHRleHQgeD0iMTAwIiB5PSIxNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1mYW1pbHk9IidDb3VyaWVyIE5ldycsIG1vbm9zcGFjZSIKICAgICAgICBmb250LXNpemU9IjE4IgogICAgICAgIGZvbnQtd2VpZ2h0PSI3MDAiCiAgICAgICAgZmlsbD0iI0ZGRkZGRiIKICAgICAgICBsZXR0ZXItc3BhY2luZz0iNiI+U0VOU1k8L3RleHQ+CgogIDwhLS0gUHVudG8gbmFyYW5qYSBlbiBsYSBTIC0tPgogIDxjaXJjbGUgY3g9IjYzIiBjeT0iMTcwIiByPSIyLjUiIGZpbGw9IiNGRjU1MDAiLz4KPC9zdmc+Cg=="/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#000; --surface:#0a0a0a; --surface2:#111;
+      --border:#1e1e1e; --accent:#FF5500;
+      --accent-dim:rgba(255,85,0,0.12); --accent-glow:rgba(255,85,0,0.25);
+      --text:#FFF; --muted:#888; --dim:#333;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-size:16px; line-height:1.6; overflow-x:hidden; cursor:none; }
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; opacity:0.4; }
+
+    #cursor { position:fixed; width:10px; height:10px; background:var(--accent); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; }
+    #cursor-ring { position:fixed; width:36px; height:36px; border:1.5px solid var(--accent); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); opacity:0.5; }
+
+    /* NAV */
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid transparent; transition:border-color .3s,background .3s; }
+    nav.scrolled { background:rgba(0,0,0,0.92); border-color:var(--border); backdrop-filter:blur(12px); }
+    .nav-logo { font-family:'Space Mono',monospace; font-size:18px; font-weight:700; letter-spacing:.1em; color:var(--text); text-decoration:none; display:flex; align-items:center; gap:10px; }
+    .nav-logo img { width:28px; height:28px; }
+    .nav-logo span { color:var(--accent); }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .nav-badge { font-size:10px; background:var(--accent-dim); color:var(--accent); border:1px solid rgba(255,85,0,.3); padding:3px 10px; border-radius:20px; letter-spacing:.08em; font-family:'Space Mono',monospace; }
+
+    /* HERO */
+    .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:120px 24px 80px; position:relative; }
+    .hero-glow { position:absolute; top:30%; left:50%; transform:translate(-50%,-50%); width:700px; height:500px; background:radial-gradient(ellipse,rgba(255,85,0,.12) 0%,transparent 70%); pointer-events:none; }
+    .hero-tag { display:inline-flex; align-items:center; gap:8px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); border:1px solid rgba(255,85,0,.3); background:var(--accent-dim); padding:6px 16px; border-radius:20px; margin-bottom:36px; animation:fadeUp .8s ease both; }
+    .hero-tag::before { content:''; width:6px; height:6px; background:var(--accent); border-radius:50%; box-shadow:0 0 8px var(--accent); animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;}50%{opacity:.4;} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+    .hero h1 { font-family:'Space Mono',monospace; font-size:clamp(48px,9vw,108px); font-weight:700; line-height:.95; letter-spacing:-.02em; margin-bottom:28px; animation:fadeUp .9s .1s ease both; }
+    .hero h1 .accent { color:var(--accent); }
+    .hero h1 .dim-char { color:var(--dim); }
+    .hero-sub { max-width:580px; font-size:18px; font-weight:300; color:var(--muted); line-height:1.7; margin-bottom:48px; animation:fadeUp .9s .2s ease both; }
+    .hero-sub strong { color:var(--text); font-weight:500; }
+    .hero-actions { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; animation:fadeUp .9s .3s ease both; }
+    .btn-primary { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:15px; padding:16px 32px; border-radius:8px; text-decoration:none; cursor:pointer; border:none; font-family:'DM Sans',sans-serif; transition:transform .2s,box-shadow .2s; box-shadow:0 0 30px var(--accent-glow); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 0 50px rgba(255,85,0,.4); }
+    .btn-secondary { display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--muted); font-size:14px; padding:16px 24px; border-radius:8px; text-decoration:none; border:1px solid var(--border); transition:color .2s,border-color .2s; }
+    .btn-secondary:hover { color:var(--text); border-color:var(--dim); }
+
+    /* STATS */
+    .stats-bar { display:flex; border:1px solid var(--border); border-radius:12px; overflow:hidden; margin:80px auto 0; max-width:760px; animation:fadeUp .9s .4s ease both; }
+    .stat { flex:1; padding:20px 24px; text-align:center; border-right:1px solid var(--border); background:var(--surface); }
+    .stat:last-child { border-right:none; }
+    .stat-num { font-family:'Space Mono',monospace; font-size:28px; font-weight:700; color:var(--accent); line-height:1; margin-bottom:4px; }
+    .stat-label { font-size:11px; color:var(--muted); letter-spacing:.05em; }
+
+    /* SECCIONES */
+    section { padding:100px 24px; }
+    .section-tag { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; }
+    .section-title { font-family:'Space Mono',monospace; font-size:clamp(28px,4vw,48px); font-weight:700; line-height:1.1; margin-bottom:16px; }
+    .section-sub { font-size:16px; color:var(--muted); max-width:500px; margin-bottom:60px; }
+
+    /* GRID FEATURES */
+    .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; max-width:1100px; margin:0 auto; }
+    .feature-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:26px; transition:border-color .2s,transform .2s; position:relative; overflow:hidden; }
+    .feature-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
+    .feature-card:hover { border-color:rgba(255,85,0,.3); transform:translateY(-3px); }
+    .feature-card:hover::before { transform:scaleX(1); }
+    .feature-icon { font-size:28px; margin-bottom:12px; display:block; }
+    .feature-category { font-size:9px; font-family:'Space Mono',monospace; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+    .feature-name { font-size:15px; font-weight:600; margin-bottom:6px; }
+    .feature-desc { font-size:13px; color:var(--muted); line-height:1.6; }
+
+    /* CATEGORÍAS */
+    .cat-label { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); padding:8px 0 16px; border-bottom:1px solid var(--border); margin-bottom:20px; display:flex; align-items:center; gap:8px; max-width:1100px; margin-left:auto; margin-right:auto; }
+
+    /* INSTALL */
+    .install-section { max-width:800px; margin:0 auto; text-align:center; }
+    .steps { display:flex; flex-direction:column; margin-top:50px; text-align:left; }
+    .step { display:flex; gap:24px; align-items:flex-start; padding:26px 0; border-bottom:1px solid var(--border); }
+    .step:last-child { border-bottom:none; }
+    .step-num { font-family:'Space Mono',monospace; font-size:13px; color:var(--accent); background:var(--accent-dim); border:1px solid rgba(255,85,0,.2); width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:700; }
+    .step-content h3 { font-size:16px; font-weight:600; margin-bottom:6px; }
+    .step-content p { font-size:14px; color:var(--muted); }
+    .step-content code { font-family:'Space Mono',monospace; font-size:12px; background:var(--surface2); border:1px solid var(--border); padding:2px 8px; border-radius:4px; color:var(--accent); }
+
+    /* CTA */
+    .cta-section { text-align:center; padding:100px 24px; position:relative; }
+    .cta-section::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:1px; height:80px; background:linear-gradient(to bottom,transparent,var(--accent)); }
+    .cta-section h2 { font-family:'Space Mono',monospace; font-size:clamp(28px,5vw,56px); font-weight:700; margin-bottom:20px; line-height:1.1; }
+    .cta-section p { color:var(--muted); font-size:16px; margin-bottom:40px; max-width:480px; margin-left:auto; margin-right:auto; }
+
+    /* FOOTER */
+    footer { border-top:1px solid var(--border); padding:28px 40px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    .footer-logo { font-family:'Space Mono',monospace; font-size:14px; color:var(--dim); letter-spacing:.1em; display:flex; align-items:center; gap:8px; }
+    .footer-logo img { width:20px; height:20px; opacity:.5; }
+    .footer-logo span { color:var(--accent); }
+    .footer-copy { font-size:12px; color:var(--dim); }
+
+    .llbtn { background:transparent; border:1px solid var(--border); color:var(--dim); font-size:10px; padding:3px 7px; border-radius:5px; cursor:pointer; font-family:'Space Mono',monospace; transition:all .2s; }
+    .llbtn:hover { border-color:var(--accent); color:var(--muted); }
+    .llbtn.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+    @media(max-width:600px){ #landing-lang { display:none !important; } }
+      nav{padding:14px 20px;}
+      .stats-bar{flex-direction:column;}
+      .stat{border-right:none;border-bottom:1px solid var(--border);}
+      footer{flex-direction:column;text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+CiAgPGRlZnM+CiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3ciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjU1MDAiIHN0b3Atb3BhY2l0eT0iMC4zIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGNTUwMCIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iYmx1ci1nbG93Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIgcmVzdWx0PSJibHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYmx1ciIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCiAgPCEtLSBGb25kbyBPTEVEIC0tPgogIDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiByeD0iNDAiIGZpbGw9IiMwMDAwMDAiLz4KCiAgPCEtLSBSZXNwbGFuZG9yIGRlIGZvbmRvIC0tPgogIDxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iODAiIGZpbGw9InVybCgjZ2xvdykiLz4KCiAgPCEtLSBPam8gZXh0ZXJpb3IgKGFjY2VzaWJpbGlkYWQgdmlzdWFsKSAtLT4KICA8ZWxsaXBzZSBjeD0iMTAwIiBjeT0iOTUiIHJ4PSI1NSIgcnk9IjMyIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjU1MDAiIHN0cm9rZS13aWR0aD0iMy41IiBmaWx0ZXI9InVybCgjYmx1ci1nbG93KSIvPgoKICA8IS0tIFB1cGlsYSAtLT4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI5NSIgcj0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNTUwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iOTUiIHI9IjgiIGZpbGw9IiNGRjU1MDAiLz4KCiAgPCEtLSBSZWZsZWpvIGVuIGVsIG9qbyAtLT4KICA8Y2lyY2xlIGN4PSIxMDgiIGN5PSI4OCIgcj0iMyIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC43Ii8+CgogIDwhLS0gTMOtbmVhcyBkZSBhY2Nlc2liaWxpZGFkIChvbmRhcyBzb25vcmFzIC8gc2XDsWFsKSAtLT4KICA8cGF0aCBkPSJNIDMwIDEzMCBRIDEwMCAxNDUgMTcwIDEzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkY1NTAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgb3BhY2l0eT0iMC41Ii8+CiAgPHBhdGggZD0iTSA0NSAxNDMgUSAxMDAgMTU1IDE1NSAxNDMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNTUwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgNSIgb3BhY2l0eT0iMC4zIi8+CgogIDwhLS0gVGV4dG8gU0VOU1kgLS0+CiAgPHRleHQgeD0iMTAwIiB5PSIxNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1mYW1pbHk9IidDb3VyaWVyIE5ldycsIG1vbm9zcGFjZSIKICAgICAgICBmb250LXNpemU9IjE4IgogICAgICAgIGZvbnQtd2VpZ2h0PSI3MDAiCiAgICAgICAgZmlsbD0iI0ZGRkZGRiIKICAgICAgICBsZXR0ZXItc3BhY2luZz0iNiI+U0VOU1k8L3RleHQ+CgogIDwhLS0gUHVudG8gbmFyYW5qYSBlbiBsYSBTIC0tPgogIDxjaXJjbGUgY3g9IjYzIiBjeT0iMTcwIiByPSIyLjUiIGZpbGw9IiNGRjU1MDAiLz4KPC9zdmc+Cg==" alt="Sensy"/>
+    SEN<span>S</span>Y
+  </a>
+  <div class="nav-right" style="display:flex;align-items:center;gap:10px;">
+    <div id="landing-lang" style="display:flex;gap:4px;">
+      <button onclick="setLang('es')" class="llbtn active" data-l="es">ES</button>
+      <button onclick="setLang('en')" class="llbtn" data-l="en">EN</button>
+      <button onclick="setLang('fr')" class="llbtn" data-l="fr">FR</button>
+      <button onclick="setLang('de')" class="llbtn" data-l="de">DE</button>
+      <button onclick="setLang('pt')" class="llbtn" data-l="pt">PT</button>
+      <button onclick="setLang('ar')" class="llbtn" data-l="ar">AR</button>
+      <button onclick="setLang('zh')" class="llbtn" data-l="zh">ZH</button>
+    </div>
+    <span class="nav-badge">14 HERRAMIENTAS · GRATIS</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag" id="ll-tag">Extensión de Accesibilidad Universal — v2.0</div>
+  <h1 id="ll-h1">La web<br/>para <span class="accent">todos</span><span class="dim-char">.</span></h1>
+  <p class="hero-sub" id="ll-sub"><strong>Sensy</strong> adapta cualquier sitio web en tiempo real a tus necesidades visuales, cognitivas, auditivas y motrices — gratis, sin registro, sin límites.</p>
+  <div class="hero-actions">
+    <button class="btn-primary ll-btn1" id="btn-descargar">↓ Descargar gratis</button>
+    <a href="#funciones" class="btn-secondary ll-btn2">Ver las 14 herramientas →</a>
+  </div>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">14</div><div class="stat-label" id="ll-stat-tools">Herramientas</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label" id="ll-stat-free">Gratuito</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label" id="ll-stat-data">Datos recopilados</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label" id="ll-stat-sites">Sitios compatibles</div></div>
+  </div>
+</section>
+
+<!-- FUNCIONES -->
+<section id="funciones" style="padding-top:60px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-tag" id="ll-sec-tag">14 Herramientas</div>
+    <h2 class="section-title" id="ll-sec-title">Adaptado a ti,<br/>no al revés.</h2>
+    <p class="section-sub" id="ll-sec-sub">Activa solo lo que necesitas. Sensy recuerda tu configuración en cada visita.</p>
+
+    <div class="cat-label">👁 Asistencia Visual</div>
+    <div class="features-grid" style="margin-bottom:40px;">
+      <div class="feature-card"><span class="feature-icon">📖</span><div class="feature-category">Visual</div><div class="feature-name">Fuente OpenDyslexic</div><div class="feature-desc">Tipografía diseñada para personas con dislexia. Mejora el reconocimiento de letras y la velocidad lectora.</div></div>
+      <div class="feature-card"><span class="feature-icon">🔤</span><div class="feature-category">Visual</div><div class="feature-name">Modo Serif</div><div class="feature-desc">Cambia a Georgia para textos largos. Mayor legibilidad en lecturas extensas.</div></div>
+      <div class="feature-card"><span class="feature-icon">⚡</span><div class="feature-category">Visual</div><div class="feature-name">Contraste Extremo</div><div class="feature-desc">Fondo negro y texto amarillo brillante. Ideal para baja visión o sensibilidad extrema a la luz.</div></div>
+      <div class="feature-card"><span class="feature-icon">🔍</span><div class="feature-category">Visual</div><div class="feature-name">Tamaño de Texto</div><div class="feature-desc">Escala el texto de cualquier página de 100% a 300% con un control deslizante preciso.</div></div>
+    </div>
+
+    <div class="cat-label">🎨 Filtros de Daltonismo</div>
+    <div class="features-grid" style="margin-bottom:40px;">
+      <div class="feature-card"><span class="feature-icon">🔴</span><div class="feature-category">Daltonismo</div><div class="feature-name">Deuteranopia</div><div class="feature-desc">Filtro para dificultad de distinción rojo-verde. El tipo más común de daltonismo.</div></div>
+      <div class="feature-card"><span class="feature-icon">🟠</span><div class="feature-category">Daltonismo</div><div class="feature-name">Protanopia</div><div class="feature-desc">Filtro para visión débil del rojo. Reequilibra los canales de color de toda la página.</div></div>
+      <div class="feature-card"><span class="feature-icon">🔵</span><div class="feature-category">Daltonismo</div><div class="feature-name">Tritanopia & Acromatopsia</div><div class="feature-desc">Filtros para daltonismo azul-amarillo y visión completamente en escala de grises.</div></div>
+    </div>
+
+    <div class="cat-label">🧠 Asistencia Cognitiva</div>
+    <div class="features-grid" style="margin-bottom:40px;">
+      <div class="feature-card"><span class="feature-icon">🎯</span><div class="feature-category">Cognitivo</div><div class="feature-name">Máscara de Enfoque TDAH</div><div class="feature-desc">Oscurece todo excepto una franja alrededor del cursor. Elimina distracciones visuales al leer.</div></div>
+      <div class="feature-card"><span class="feature-icon">🌿</span><div class="feature-category">Cognitivo</div><div class="feature-name">Atenuación Sensorial</div><div class="feature-desc">Detiene animaciones, pausa vídeos y aplica filtro calmante. Para autismo e hipersensibilidad.</div></div>
+      <div class="feature-card"><span class="feature-icon">🧘</span><div class="feature-category">Cognitivo</div><div class="feature-name">Modo Lectura Zen</div><div class="feature-desc">Oculta todo excepto el contenido principal. Lectura sin ninguna distracción visual.</div></div>
+
+    </div>
+
+    <div class="cat-label">🦻 Asistencia Auditiva</div>
+    <div class="features-grid" style="margin-bottom:40px;">
+      <div class="feature-card"><span class="feature-icon">🔔</span><div class="feature-category">Auditivo</div><div class="feature-name">Alertas Visuales de Sonido</div><div class="feature-desc">Parpadeo de pantalla cuando hay sonidos altos. Notificación visual de eventos sonoros para personas con hipoacusia.</div></div>
+    </div>
+
+    <div class="cat-label">🖐 Asistencia Motorizada</div>
+    <div class="features-grid" style="margin-bottom:40px;">
+      <div class="feature-card"><span class="feature-icon">👆</span><div class="feature-category">Motorizado</div><div class="feature-name">Áreas de Clic Expandidas</div><div class="feature-desc">Aumenta la zona táctil de botones y enlaces en 20px. Para temblor o precisión reducida.</div></div>
+      <div class="feature-card"><span class="feature-icon">⌨️</span><div class="feature-category">Motorizado</div><div class="feature-name">Super Enfoque Secuencial</div><div class="feature-desc">Resalta el elemento activo al navegar con teclado. Nunca pierdas el foco de vista.</div></div>
+    </div>
+
+    <div class="cat-label">🔊 Lector en Voz Alta</div>
+    <div class="features-grid" style="margin-bottom:40px;">
+      <div class="feature-card"><span class="feature-icon">🔊</span><div class="feature-category">Auditivo / Cognitivo</div><div class="feature-name">Lector en Voz Alta (TTS)</div><div class="feature-desc">Lee en voz alta el texto seleccionado o la página completa. Ajusta la velocidad. Ideal para dislexia, baja visión o cansancio visual.</div></div>
+    </div>
+
+    <div class="cat-label">🌙 Modo Oscuro</div>
+    <div class="features-grid" style="margin-bottom:40px;">
+      <div class="feature-card"><span class="feature-icon">🌙</span><div class="feature-category">Visual</div><div class="feature-name">Modo Oscuro Forzado</div><div class="feature-desc">Aplica modo oscuro inteligente a cualquier sitio web, aunque no lo tenga. Ajusta la intensidad. Reduce la fatiga visual y el dolor de cabeza.</div></div>
+    </div>
+
+    <div class="cat-label">🖱️ Puntero Grande</div>
+    <div class="features-grid">
+      <div class="feature-card"><span class="feature-icon">🖱️</span><div class="feature-category">Visual / Motor</div><div class="feature-name">Puntero Grande</div><div class="feature-desc">Cursor grande y personalizable en 4 colores de alta visibilidad. Para baja visión, temblor de mano o pantallas grandes.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALACIÓN -->
+<section id="instalar">
+  <div class="install-section">
+    <div class="section-tag" id="ll-install-tag">Instalación</div>
+    <h2 class="section-title" id="ll-install-title">Listo en<br/>30 segundos.</h2>
+    <p class="section-sub" id="ll-install-sub">Sin cuenta. Sin contraseña. Sin datos personales.</p>
+    <div id="steps-container"></div>
+    <script>
+    (function renderSteps(){
+      var isFF = typeof InstallTrigger !== 'undefined' || navigator.userAgent.toLowerCase().includes('firefox');
+      var isChr = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+      var steps;
+      if(isFF){
+        steps=[
+          {n:'01',h:'Haz clic en "Obtener para Firefox"',d:'El botón te llevará directamente a la tienda oficial de Firefox (AMO).'},
+          {n:'02',h:'Haz clic en "Agregar a Firefox"',d:'En la página de la tienda, pulsa el botón azul para instalar.'},
+          {n:'03',h:'Confirma el permiso',d:'Firefox preguntará si deseas agregar Sensy. Acepta y la extensión quedará instalada al instante.'},
+          {n:'04',h:'¡Listo! Haz clic en el ícono 👁',d:'Sensy aparecerá en tu barra de herramientas. ¡Empieza a personalizar tu experiencia!'}
+        ];
+      } else if(isChr){
+        steps=[
+          {n:'01',h:'Haz clic en "Agregar a Chrome"',d:'El botón te llevará directamente a la Chrome Web Store.'},
+          {n:'02',h:'Haz clic en "Añadir a Chrome"',d:'En la tienda, pulsa el botón azul para instalar Sensy.'},
+          {n:'03',h:'Confirma el permiso',d:'Chrome pedirá confirmación. Acepta y la extensión quedará instalada.'},
+          {n:'04',h:'¡Listo! Haz clic en el ícono 👁',d:'Sensy aparecerá en tu barra de herramientas. ¡Empieza a personalizar tu experiencia!'}
+        ];
+      } else {
+        steps=[
+          {n:'01',h:'Descarga el archivo ZIP',d:'Haz clic en el botón de descarga y descomprime la carpeta en tu computador.'},
+          {n:'02',h:'Abre las extensiones de tu navegador',d:'En Chrome: <code>chrome://extensions/</code> &nbsp;|&nbsp; En Edge: <code>edge://extensions/</code>'},
+          {n:'03',h:'Activa el Modo Desarrollador',d:'En la esquina superior derecha activa el interruptor <strong>"Modo de desarrollador"</strong>.'},
+          {n:'04',h:'Carga la extensión',d:'Haz clic en <strong>"Cargar descomprimida"</strong> y selecciona la carpeta <code>sensy</code>.'},
+          {n:'05',h:'¡Listo! Haz clic en el ícono 👁',d:'Sensy aparecerá en tu barra de herramientas. ¡Empieza a personalizar!'}
+        ];
+      }
+      var html='<div class="steps">';
+      steps.forEach(function(s){ html+='<div class="step"><div class="step-num">'+s.n+'</div><div class="step-content"><h3>'+s.h+'</h3><p>'+s.d+'</p></div></div>'; });
+      html+='</div>';
+      document.getElementById('steps-container').innerHTML=html;
+    })();
+    </script>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 id="ll-cta-title">Tu web,<br/><span style="color:var(--accent)">a tu medida.</span></h2>
+  <p id="ll-cta-sub">14 herramientas. Gratis para siempre. Porque la accesibilidad no debería costar nada.</p>
+  <button class="btn-primary ll-btn-cta" id="btn-descargar2">Instalar Sensy gratis →</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+CiAgPGRlZnM+CiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3ciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjU1MDAiIHN0b3Atb3BhY2l0eT0iMC4zIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGNTUwMCIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGZpbHRlciBpZD0iYmx1ci1nbG93Ij4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIgcmVzdWx0PSJibHVyIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYmx1ciIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCiAgPCEtLSBGb25kbyBPTEVEIC0tPgogIDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiByeD0iNDAiIGZpbGw9IiMwMDAwMDAiLz4KCiAgPCEtLSBSZXNwbGFuZG9yIGRlIGZvbmRvIC0tPgogIDxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iODAiIGZpbGw9InVybCgjZ2xvdykiLz4KCiAgPCEtLSBPam8gZXh0ZXJpb3IgKGFjY2VzaWJpbGlkYWQgdmlzdWFsKSAtLT4KICA8ZWxsaXBzZSBjeD0iMTAwIiBjeT0iOTUiIHJ4PSI1NSIgcnk9IjMyIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjU1MDAiIHN0cm9rZS13aWR0aD0iMy41IiBmaWx0ZXI9InVybCgjYmx1ci1nbG93KSIvPgoKICA8IS0tIFB1cGlsYSAtLT4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI5NSIgcj0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNTUwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iOTUiIHI9IjgiIGZpbGw9IiNGRjU1MDAiLz4KCiAgPCEtLSBSZWZsZWpvIGVuIGVsIG9qbyAtLT4KICA8Y2lyY2xlIGN4PSIxMDgiIGN5PSI4OCIgcj0iMyIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC43Ii8+CgogIDwhLS0gTMOtbmVhcyBkZSBhY2Nlc2liaWxpZGFkIChvbmRhcyBzb25vcmFzIC8gc2XDsWFsKSAtLT4KICA8cGF0aCBkPSJNIDMwIDEzMCBRIDEwMCAxNDUgMTcwIDEzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkY1NTAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgb3BhY2l0eT0iMC41Ii8+CiAgPHBhdGggZD0iTSA0NSAxNDMgUSAxMDAgMTU1IDE1NSAxNDMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNTUwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgNSIgb3BhY2l0eT0iMC4zIi8+CgogIDwhLS0gVGV4dG8gU0VOU1kgLS0+CiAgPHRleHQgeD0iMTAwIiB5PSIxNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1mYW1pbHk9IidDb3VyaWVyIE5ldycsIG1vbm9zcGFjZSIKICAgICAgICBmb250LXNpemU9IjE4IgogICAgICAgIGZvbnQtd2VpZ2h0PSI3MDAiCiAgICAgICAgZmlsbD0iI0ZGRkZGRiIKICAgICAgICBsZXR0ZXItc3BhY2luZz0iNiI+U0VOU1k8L3RleHQ+CgogIDwhLS0gUHVudG8gbmFyYW5qYSBlbiBsYSBTIC0tPgogIDxjaXJjbGUgY3g9IjYzIiBjeT0iMTcwIiByPSIyLjUiIGZpbGw9IiNGRjU1MDAiLz4KPC9zdmc+Cg==" alt="Sensy"/>
+    SEN<span>S</span>Y
+  </div>
+  <div class="footer-copy" id="ll-footer">© 2025 LOND COMPANY · Todos los derechos reservados</div>
+  <div title="Construido con Claude" style="opacity:0.18;transition:opacity .3s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='0.18'">
+    <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ala izquierda superior -->
+      <path d="M14 11 C10 7 3 4 1 8 C-1 13 6 15 14 11Z" fill="#FF5500" opacity="0.9"/>
+      <!-- Ala izquierda inferior -->
+      <path d="M14 11 C9 12 4 17 6 20 C8 23 13 18 14 11Z" fill="#FF5500" opacity="0.7"/>
+      <!-- Ala derecha superior -->
+      <path d="M14 11 C18 7 25 4 27 8 C29 13 22 15 14 11Z" fill="#FF5500" opacity="0.9"/>
+      <!-- Ala derecha inferior -->
+      <path d="M14 11 C19 12 24 17 22 20 C20 23 15 18 14 11Z" fill="#FF5500" opacity="0.7"/>
+      <!-- Cuerpo -->
+      <ellipse cx="14" cy="11" rx="1.2" ry="5" fill="#ffffff" opacity="0.6"/>
+      <!-- Antenas -->
+      <line x1="14" y1="6" x2="10" y2="2" stroke="#ffffff" stroke-width="0.8" opacity="0.5"/>
+      <line x1="14" y1="6" x2="18" y2="2" stroke="#ffffff" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="10" cy="2" r="1" fill="#FF5500" opacity="0.6"/>
+      <circle cx="18" cy="2" r="1" fill="#FF5500" opacity="0.6"/>
+    </svg>
+  </div>
+</footer>
+
+<script>
+  // Traducciones de la landing
+  const LANDING_T = {
+    es: { tag:'Extensión de Accesibilidad Universal — v2.0', h1a:'La web', h1b:'para', h1c:'todos', sub:'adapta cualquier sitio web en tiempo real a tus necesidades visuales, cognitivas, auditivas y motrices — gratis, sin registro, sin límites.', btn1:'↓ Descargar gratis', btn2:'Ver las 14 herramientas →', tools:'14 Herramientas', free:'Gratuito', data:'Datos recopilados', sites:'Sitios compatibles', sec_tag:'14 Herramientas', sec_title1:'Adaptado a ti,', sec_title2:'no al revés.', sec_sub:'Activa solo lo que necesitas. Sensy recuerda tu configuración en cada visita.', install_tag:'Instalación', install_title1:'Listo en', install_title2:'30 segundos.', install_sub:'Sin cuenta. Sin contraseña. Sin datos personales.', cta_title1:'Tu web,', cta_title2:'a tu medida.', cta_sub:'14 herramientas. Gratis para siempre. Porque la accesibilidad no debería costar nada.', btn_cta:'Instalar Sensy gratis →', s1:'Descarga el archivo', s1d:'Haz clic en el botón de descarga y descomprime la carpeta en tu computador.', s2:'Abre las extensiones de Chrome', s2d:'Escribe chrome://extensions/ en la barra de direcciones y presiona Enter.', s3:'Activa el Modo Desarrollador', s3d:'En la esquina superior derecha activa el interruptor "Modo de desarrollador".', s4:'Carga la extensión', s4d:'Haz clic en "Cargar descomprimida" y selecciona la carpeta sensy.', s5:'¡Listo! Haz clic en el ícono 👁', s5d:'Sensy aparecerá en tu barra de herramientas. ¡Empieza a personalizar tu experiencia!', footer:'Todos los derechos reservados' },
+    en: { tag:'Universal Accessibility Extension — v2.0', h1a:'The web', h1b:'for', h1c:'everyone', sub:'adapts any website in real time to your visual, cognitive, auditory and motor needs — free, no registration, no limits.', btn1:'↓ Download free', btn2:'See all 14 tools →', tools:'14 Tools', free:'Free', data:'Data collected', sites:'Compatible sites', sec_tag:'14 Tools', sec_title1:'Adapted to you,', sec_title2:'not the other way.', sec_sub:'Activate only what you need. Sensy remembers your settings on every visit.', install_tag:'Installation', install_title1:'Ready in', install_title2:'30 seconds.', install_sub:'No account. No password. No personal data.', cta_title1:'Your web,', cta_title2:'your way.', cta_sub:'14 tools. Free forever. Because accessibility should cost nothing.', btn_cta:'Install Sensy free →', s1:'Download the file', s1d:'Click the download button and unzip the folder on your computer.', s2:'Open Chrome extensions', s2d:'Type chrome://extensions/ in the address bar and press Enter.', s3:'Enable Developer Mode', s3d:'In the top right corner, toggle "Developer mode" on.', s4:'Load the extension', s4d:'Click "Load unpacked" and select the sensy folder.', s5:'Done! Click the 👁 icon', s5d:'Sensy will appear in your toolbar. Start customizing your web experience!', footer:'All rights reserved' },
+    fr: { tag:'Extension d\'Accessibilité Universelle — v2.0', h1a:'Le web', h1b:'pour', h1c:'tous', sub:'adapte n\'importe quel site web en temps réel à vos besoins visuels, cognitifs, auditifs et moteurs — gratuit, sans inscription, sans limites.', btn1:'↓ Télécharger gratuitement', btn2:'Voir les 14 outils →', tools:'14 Outils', free:'Gratuit', data:'Données collectées', sites:'Sites compatibles', sec_tag:'14 Outils', sec_title1:'Adapté à vous,', sec_title2:'pas l\'inverse.', sec_sub:'Activez seulement ce dont vous avez besoin. Sensy mémorise vos paramètres.', install_tag:'Installation', install_title1:'Prêt en', install_title2:'30 secondes.', install_sub:'Sans compte. Sans mot de passe. Sans données personnelles.', cta_title1:'Votre web,', cta_title2:'à votre mesure.', cta_sub:'14 outils. Gratuit pour toujours. Parce que l\'accessibilité ne devrait rien coûter.', btn_cta:'Installer Sensy gratuit →', s1:'Téléchargez le fichier', s1d:'Cliquez sur le bouton de téléchargement et décompressez le dossier.', s2:'Ouvrez les extensions Chrome', s2d:'Tapez chrome://extensions/ dans la barre d\'adresse et appuyez sur Entrée.', s3:'Activez le mode développeur', s3d:'En haut à droite, activez le commutateur "Mode développeur".', s4:'Chargez l\'extension', s4d:'Cliquez sur "Charger l\'extension non empaquetée" et sélectionnez le dossier sensy.', s5:'Prêt ! Cliquez sur l\'icône 👁', s5d:'Sensy apparaîtra dans votre barre d\'outils. Commencez à personnaliser !', footer:'Tous droits réservés' },
+    de: { tag:'Universelle Barrierefreiheits-Erweiterung — v2.0', h1a:'Das Web', h1b:'für', h1c:'alle', sub:'passt jede Website in Echtzeit an Ihre visuellen, kognitiven, auditiven und motorischen Bedürfnisse an — kostenlos, ohne Registrierung.', btn1:'↓ Kostenlos herunterladen', btn2:'Alle 14 Tools ansehen →', tools:'14 Tools', free:'Kostenlos', data:'Gesammelte Daten', sites:'Kompatible Seiten', sec_tag:'14 Tools', sec_title1:'Angepasst an Sie,', sec_title2:'nicht umgekehrt.', sec_sub:'Aktivieren Sie nur, was Sie brauchen. Sensy merkt sich Ihre Einstellungen.', install_tag:'Installation', install_title1:'Bereit in', install_title2:'30 Sekunden.', install_sub:'Kein Konto. Kein Passwort. Keine persönlichen Daten.', cta_title1:'Ihr Web,', cta_title2:'nach Ihren Wünschen.', cta_sub:'14 Tools. Für immer kostenlos. Denn Barrierefreiheit sollte nichts kosten.', btn_cta:'Sensy kostenlos installieren →', s1:'Datei herunterladen', s1d:'Klicken Sie auf den Download-Button und entpacken Sie den Ordner.', s2:'Chrome-Erweiterungen öffnen', s2d:'Geben Sie chrome://extensions/ in die Adressleiste ein.', s3:'Entwicklermodus aktivieren', s3d:'Aktivieren Sie oben rechts den "Entwicklermodus".', s4:'Erweiterung laden', s4d:'Klicken Sie auf "Entpackte Erweiterung laden" und wählen Sie den sensy-Ordner.', s5:'Fertig! Auf das 👁 Symbol klicken', s5d:'Sensy erscheint in Ihrer Symbolleiste. Passen Sie Ihr Web-Erlebnis an!', footer:'Alle Rechte vorbehalten' },
+    pt: { tag:'Extensão de Acessibilidade Universal — v2.0', h1a:'A web', h1b:'para', h1c:'todos', sub:'adapta qualquer site em tempo real às suas necessidades visuais, cognitivas, auditivas e motoras — grátis, sem registro, sem limites.', btn1:'↓ Baixar grátis', btn2:'Ver as 14 ferramentas →', tools:'14 Ferramentas', free:'Gratuito', data:'Dados coletados', sites:'Sites compatíveis', sec_tag:'14 Ferramentas', sec_title1:'Adaptado a você,', sec_title2:'não o contrário.', sec_sub:'Ative só o que precisa. Sensy lembra suas configurações em cada visita.', install_tag:'Instalação', install_title1:'Pronto em', install_title2:'30 segundos.', install_sub:'Sem conta. Sem senha. Sem dados pessoais.', cta_title1:'Sua web,', cta_title2:'do seu jeito.', cta_sub:'14 ferramentas. Grátis para sempre. Porque acessibilidade não deveria custar nada.', btn_cta:'Instalar Sensy grátis →', s1:'Baixe o arquivo', s1d:'Clique no botão de download e descompacte a pasta no seu computador.', s2:'Abra as extensões do Chrome', s2d:'Digite chrome://extensions/ na barra de endereços e pressione Enter.', s3:'Ative o Modo Desenvolvedor', s3d:'No canto superior direito, ative o interruptor "Modo desenvolvedor".', s4:'Carregue a extensão', s4d:'Clique em "Carregar sem compactação" e selecione a pasta sensy.', s5:'Pronto! Clique no ícone 👁', s5d:'Sensy aparecerá na sua barra de ferramentas. Comece a personalizar!', footer:'Todos os direitos reservados' },
+    ar: { tag:'إضافة إمكانية وصول عالمية — v2.0', h1a:'الويب', h1b:'للجميع', h1c:'', sub:'تكيّف أي موقع ويب في الوقت الفعلي مع احتياجاتك البصرية والمعرفية والسمعية والحركية — مجانًا، بدون تسجيل.', btn1:'↓ تحميل مجاني', btn2:'عرض الأدوات الـ 14 →', tools:'14 أداة', free:'مجاني', data:'البيانات المجمعة', sites:'المواقع المتوافقة', sec_tag:'14 أداة', sec_title1:'متكيف معك،', sec_title2:'وليس العكس.', sec_sub:'فعّل ما تحتاجه فقط. Sensy يتذكر إعداداتك في كل زيارة.', install_tag:'التثبيت', install_title1:'جاهز في', install_title2:'30 ثانية.', install_sub:'بدون حساب. بدون كلمة مرور. بدون بيانات شخصية.', cta_title1:'ويبك،', cta_title2:'على مقاسك.', cta_sub:'14 أداة. مجاني للأبد. لأن إمكانية الوصول يجب أن تكون مجانية.', btn_cta:'تثبيت Sensy مجانًا →', s1:'تحميل الملف', s1d:'انقر على زر التحميل وفك ضغط المجلد على جهازك.', s2:'افتح إضافات Chrome', s2d:'اكتب chrome://extensions/ في شريط العنوان واضغط Enter.', s3:'تفعيل وضع المطور', s3d:'في الزاوية العلوية اليمنى، فعّل "وضع المطور".', s4:'تحميل الإضافة', s4d:'انقر على "تحميل غير مضغوط" وحدد مجلد sensy.', s5:'جاهز! انقر على أيقونة 👁', s5d:'سيظهر Sensy في شريط الأدوات. ابدأ بتخصيص تجربتك!', footer:'جميع الحقوق محفوظة' },
+    zh: { tag:'通用无障碍扩展程序 — v2.0', h1a:'网络', h1b:'为', h1c:'所有人', sub:'实时适应任何网站，满足您的视觉、认知、听觉和运动需求 — 免费，无需注册，无限制。', btn1:'↓ 免费下载', btn2:'查看全部14个工具 →', tools:'14个工具', free:'免费', data:'收集的数据', sites:'兼容网站', sec_tag:'14个工具', sec_title1:'为您而设，', sec_title2:'而非相反。', sec_sub:'只激活您需要的功能。Sensy会记住您每次访问的设置。', install_tag:'安装', install_title1:'30秒内', install_title2:'即可就绪。', install_sub:'无需账户。无需密码。无需个人数据。', cta_title1:'您的网络，', cta_title2:'您的方式。', cta_sub:'14个工具。永久免费。因为无障碍不应该有代价。', btn_cta:'免费安装Sensy →', s1:'下载文件', s1d:'点击下载按钮并将文件夹解压到您的电脑。', s2:'打开Chrome扩展程序', s2d:'在地址栏输入chrome://extensions/并按Enter。', s3:'启用开发者模式', s3d:'在右上角打开"开发者模式"开关。', s4:'加载扩展程序', s4d:'点击"加载已解压的扩展程序"并选择sensy文件夹。', s5:'完成！点击👁图标', s5d:'Sensy将出现在工具栏中。开始个性化您的网页体验！', footer:'版权所有' },
+  };
+
+  function setLang(lang) {
+    const t = LANDING_T[lang] || LANDING_T['es'];
+    const s = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    const h = (id,v) => { const e=document.getElementById(id); if(e) e.innerHTML=v; };
+    s('ll-tag', t.tag);
+    h('ll-h1', `${t.h1a}<br/>${t.h1b} <span class="accent">${t.h1c}</span><span class="dim-char">.</span>`);
+    const subEl = document.getElementById('ll-sub'); if(subEl) subEl.innerHTML = `<strong>Sensy</strong> ${t.sub}`;
+    document.querySelectorAll('.ll-btn1').forEach(e=>e.textContent=t.btn1);
+    document.querySelectorAll('.ll-btn2').forEach(e=>e.textContent=t.btn2);
+    s('ll-stat-tools', t.tools); s('ll-stat-free', t.free);
+    s('ll-stat-data', t.data); s('ll-stat-sites', t.sites);
+    s('ll-sec-tag', t.sec_tag);
+    h('ll-sec-title', `${t.sec_title1}<br/>${t.sec_title2}`);
+    s('ll-sec-sub', t.sec_sub);
+    s('ll-install-tag', t.install_tag);
+    h('ll-install-title', `${t.install_title1}<br/>${t.install_title2}`);
+    s('ll-install-sub', t.install_sub);
+    h('ll-cta-title', `${t.cta_title1}<br/><span style="color:var(--accent)">${t.cta_title2}</span>`);
+    s('ll-cta-sub', t.cta_sub);
+    document.querySelectorAll('.ll-btn-cta').forEach(e=>e.textContent=t.btn_cta);
+    s('ll-s1',t.s1); s('ll-s1d',t.s1d); s('ll-s2',t.s2); s('ll-s2d',t.s2d);
+    s('ll-s3',t.s3); s('ll-s3d',t.s3d); s('ll-s4',t.s4); s('ll-s4d',t.s4d);
+    s('ll-s5',t.s5); s('ll-s5d',t.s5d);
+    s('ll-footer', `© 2025 LOND COMPANY · ${t.footer}`);
+    document.querySelectorAll('.llbtn').forEach(b=>b.classList.toggle('active', b.dataset.l===lang));
+    document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+  }
+  setLang('es');
+  const cursor=document.getElementById('cursor'), ring=document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{ mx=e.clientX;my=e.clientY; cursor.style.left=mx+'px';cursor.style.top=my+'px'; });
+  (function anim(){ rx+=(mx-rx)*.12;ry+=(my-ry)*.12; ring.style.left=rx+'px';ring.style.top=ry+'px'; requestAnimationFrame(anim); })();
+
+  // Nav scroll
+  window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>40));
+
+  // ── Detección de navegador y descarga/tienda ────────────────
+  const FIREFOX_URL  = 'https://addons.mozilla.org/es/firefox/addon/sensy/';
+  const CHROME_URL   = 'https://chrome.google.com/webstore/detail/sensy/PENDING';
+  const ZIP_FALLBACK = 'sensy-extension-v2.1.zip';
+
+  function esFirefox() {
+    return typeof InstallTrigger !== 'undefined' ||
+           navigator.userAgent.toLowerCase().includes('firefox');
+  }
+  function esChrome() {
+    return !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+  }
+
+  function descargar() {
+    if (esFirefox()) {
+      window.open(FIREFOX_URL, '_blank');
+    } else if (esChrome()) {
+      window.open(CHROME_URL, '_blank');
+    } else {
+      // Otro navegador → descarga el ZIP directamente
+      const a = document.createElement('a');
+      a.href = ZIP_FALLBACK;
+      a.download = ZIP_FALLBACK;
+      a.click();
+    }
+  }
+
+  // Actualiza el texto del botón según el navegador al cargar
+  function actualizarBotones() {
+    const labels = document.querySelectorAll('.ll-btn1, .ll-btn-cta');
+    if (esFirefox()) {
+      labels.forEach(el => {
+        el.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg> Obtener para Firefox';
+      });
+    } else if (esChrome()) {
+      labels.forEach(el => {
+        el.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg> Agregar a Chrome';
+      });
+    }
+    // Si es otro navegador deja el texto original
+  }
+
+  document.getElementById('btn-descargar').onclick=descargar;
+  document.getElementById('btn-descargar2').onclick=descargar;
+  actualizarBotones();
+
+  // Animaciones al entrar en viewport
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{ if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';} }),{threshold:.1});
+  document.querySelectorAll('.feature-card,.step').forEach(el=>{ el.style.opacity='0';el.style.transform='translateY(24px)';el.style.transition='opacity .5s ease,transform .5s ease'; obs.observe(el); });
+</script>
+</body>
+</html>
