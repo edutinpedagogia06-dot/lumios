@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="logo12.png">
 <title>Leer — LUMIOS</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -21,7 +22,7 @@
 </head>
 <body>
 <nav class="navbar">
-  <div class="logo"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="logo" id="logoSecret" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem"><img src="logo12.png" alt="" style="width:32px;height:32px;border-radius:6px" onclick="logoClick(event)"><a href="index.html">LUM<em>IO</em>S</a></div>
   <div class="nav-links">
     <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
     <button class="nav-link active" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
@@ -29,7 +30,6 @@
     <button class="nav-link" onclick="location.href='peliculas.html'"><i class="ti ti-movie"></i> Películas</button>
   </div>
   <div class="nav-right">
-    <button class="btn-icon" onclick="location.href='admin.html'" title="Admin"><i class="ti ti-shield-lock"></i></button>
   </div>
 </nav>
 
@@ -158,5 +158,6 @@ async function load() {
 }
 load();
 </script>
+<script>let logoClicks=0,logoTimer=null;function logoClick(e){e.preventDefault();e.stopPropagation();logoClicks++;clearTimeout(logoTimer);if(logoClicks>=3){logoClicks=0;location.href="admin.html";}logoTimer=setTimeout(()=>logoClicks=0,800);}</script>
 </body>
 </html>
