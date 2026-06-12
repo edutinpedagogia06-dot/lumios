@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ver Película — LUMIOS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  .movie-layout{max-width:1000px;margin:0 auto;padding:2rem}
+  .movie-info{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.75rem;margin-top:1.25rem}
+  .movie-inner{display:grid;grid-template-columns:140px 1fr;gap:1.5rem;align-items:start}
+  .movie-cover{width:140px;aspect-ratio:2/3;border-radius:var(--r);overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:2.5rem;flex-shrink:0}
+  .movie-cover img{width:100%;height:100%;object-fit:cover}
+  @media(max-width:600px){.movie-inner{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
+    <button class="nav-link" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
+    <button class="nav-link" onclick="location.href='anime.html'"><i class="ti ti-device-tv"></i> Anime</button>
+    <button class="nav-link active" onclick="location.href='peliculas.html'"><i class="ti ti-movie"></i> Películas</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" onclick="location.href='peliculas.html'"><i class="ti ti-arrow-left"></i> Volver</button>
+  </div>
+</nav>
+
+<div class="movie-layout">
+  <div style="background:#000;border-radius:var(--rl);overflow:hidden">
+    <div class="player-wrap" id="playerWrap">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:16/9;color:var(--text3);gap:0.75rem">
+        <span style="font-size:3rem">🎥</span><p>Cargando...</p>
+      </div>
+    </div>
+  </div>
+  <div class="movie-info">
+    <div class="movie-inner">
+      <div class="movie-cover" id="movieCover">🎥</div>
+      <div>
+        <div style="font-size:1.5rem;font-weight:900;margin-bottom:0.5rem" id="movieTitle">Cargando...</div>
+        <div style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
+          <span style="font-size:0.78rem;color:var(--text3)"><i class="ti ti-clock"></i> <span id="movieDur">—</span></span>
+          <span style="font-size:0.78rem;color:var(--text3)"><i class="ti ti-tag"></i> <span id="movieGenero">—</span></span>
+          <span style="font-size:0.78rem;color:var(--text3)"><i class="ti ti-calendar"></i> <span id="movieAnio">—</span></span>
+        </div>
+        <div class="genre-tags" id="movieTags" style="margin-bottom:1rem"></div>
+        <div style="color:var(--text2);font-size:0.88rem;line-height:1.7" id="movieDesc"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="github.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const pelId = params.get("id");
+async function load() {
+  const { data } = await DB.getPeliculas();
+  const p = data.find(p => p.id === pelId);
+  if (!p) {
+    document.querySelector(".movie-layout").innerHTML = `<div class="empty"><span>😕</span><p>Película no encontrada.</p></div>`;
+    return;
+  }
+  document.title = p.titulo + " — LUMIOS";
+  document.getElementById("playerWrap").innerHTML = p.driveId
+    ? `<iframe src="https://drive.google.com/file/d/${p.driveId}/preview" allowfullscreen allow="autoplay"></iframe>`
+    : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:16/9;color:var(--text3)"><span style="font-size:3rem">🎥</span><p>Video no disponible</p></div>`;
+  document.getElementById("movieTitle").textContent = p.titulo;
+  document.getElementById("movieDur").textContent = p.duracion||"—";
+  document.getElementById("movieGenero").textContent = p.genero||"—";
+  document.getElementById("movieAnio").textContent = p.anio||"—";
+  document.getElementById("movieDesc").textContent = p.sinopsis||"";
+  document.getElementById("movieTags").innerHTML = (p.generos||[]).map(g=>`<span class="genre-tag">${g}</span>`).join("");
+  if (p.cover) document.getElementById("movieCover").innerHTML = `<img src="${coverUrl(p.cover)}" alt="${p.titulo}">`;
+}
+load();
+</script>
+</body>
+</html>

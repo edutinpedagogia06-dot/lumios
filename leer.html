@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leer — LUMIOS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  .reader-top{background:var(--bg2);border-bottom:1px solid var(--border);padding:0.85rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:62px;z-index:100;gap:1rem;flex-wrap:wrap}
+  .reader-manga-title{font-size:0.82rem;font-weight:700}
+  .reader-cap-label{font-size:0.75rem;color:var(--text3)}
+  .reader-nav-btns{display:flex;align-items:center;gap:0.5rem}
+  .reader-select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-size:0.78rem;padding:0.4rem 0.7rem;border-radius:var(--r);cursor:pointer}
+  .reader-select:focus{outline:none;border-color:var(--red)}
+  .pages-wrap{max-width:860px;margin:0 auto;padding:0.5rem 1rem 3rem}
+  .manga-img{width:100%;display:block;margin-bottom:2px}
+  .manga-img img{width:100%;display:block}
+  .img-err{width:100%;aspect-ratio:2/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:0.85rem;margin-bottom:2px}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
+    <button class="nav-link active" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
+    <button class="nav-link" onclick="location.href='anime.html'"><i class="ti ti-device-tv"></i> Anime</button>
+    <button class="nav-link" onclick="location.href='peliculas.html'"><i class="ti ti-movie"></i> Películas</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn-icon" onclick="location.href='admin.html'" title="Admin"><i class="ti ti-shield-lock"></i></button>
+  </div>
+</nav>
+
+<!-- DETALLE -->
+<div id="detailView">
+  <div class="detail-hero">
+    <div class="detail-inner">
+      <div class="detail-cover" id="detailCover">📖</div>
+      <div>
+        <div class="detail-type" id="detailType">MANGA</div>
+        <div class="detail-title" id="detailTitle">Cargando...</div>
+        <div class="detail-desc" id="detailDesc"></div>
+        <div class="genre-tags" id="detailTags"></div>
+      </div>
+    </div>
+  </div>
+  <div class="caps-list">
+    <div class="section-title" style="margin-bottom:1.25rem">Capítulos</div>
+    <div id="capsList"><div class="loading"><div class="spinner"></div><br>Cargando...</div></div>
+  </div>
+</div>
+
+<!-- LECTOR -->
+<div id="readerView" style="display:none">
+  <div class="reader-top">
+    <div style="display:flex;align-items:center;gap:0.75rem;min-width:0">
+      <button class="btn-icon btn-sm" onclick="closeReader()"><i class="ti ti-arrow-left"></i></button>
+      <div>
+        <div class="reader-manga-title" id="readerTitle"></div>
+        <div class="reader-cap-label" id="readerCapLabel"></div>
+      </div>
+    </div>
+    <div class="reader-nav-btns">
+      <button class="btn btn-outline btn-sm" id="btnPrev" onclick="changeChapter(-1)"><i class="ti ti-chevron-left"></i> Anterior</button>
+      <select class="reader-select" id="capSelect" onchange="openChapter(+this.value)"></select>
+      <button class="btn btn-outline btn-sm" id="btnNext" onclick="changeChapter(1)">Siguiente <i class="ti ti-chevron-right"></i></button>
+    </div>
+  </div>
+  <div class="pages-wrap" id="pagesWrap"></div>
+</div>
+
+<footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="github.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const mangaId = params.get("id");
+let mangaData = null, currentCapIdx = 0;
+
+function renderPages(paginas) {
+  const wrap = document.getElementById("pagesWrap");
+  if (!paginas || !paginas.length) {
+    wrap.innerHTML = `<div class="empty"><span>📖</span><p>No hay páginas en este capítulo.</p></div>`;
+    return;
+  }
+  wrap.innerHTML = paginas.map((pid, i) =>
+    `<div class="manga-img"><img
+      src="https://drive.google.com/uc?export=view&id=${pid}"
+      alt="Página ${i+1}"
+      loading="${i<3?'eager':'lazy'}"
+      onerror="this.parentElement.innerHTML='<div class=img-err>No se pudo cargar la página ${i+1}</div>'"
+    ></div>`
+  ).join("");
+}
+
+function buildSelect() {
+  document.getElementById("capSelect").innerHTML = mangaData.capitulos.map((c,i) =>
+    `<option value="${i}" ${i===currentCapIdx?"selected":""}>Cap. ${c.numero}${c.titulo?" — "+c.titulo:""}</option>`
+  ).join("");
+}
+
+function openChapter(idx) {
+  currentCapIdx = idx;
+  const cap = mangaData.capitulos[idx];
+  document.getElementById("detailView").style.display = "none";
+  document.getElementById("readerView").style.display = "block";
+  document.getElementById("readerTitle").textContent = mangaData.titulo;
+  document.getElementById("readerCapLabel").textContent = `Capítulo ${cap.numero}${cap.titulo?" — "+cap.titulo:""}`;
+  document.getElementById("btnPrev").disabled = idx === 0;
+  document.getElementById("btnNext").disabled = idx === mangaData.capitulos.length - 1;
+  buildSelect();
+  renderPages(cap.paginas || []);
+  window.scrollTo(0, 0);
+}
+
+function closeReader() {
+  document.getElementById("readerView").style.display = "none";
+  document.getElementById("detailView").style.display = "block";
+  window.scrollTo(0, 0);
+}
+
+function changeChapter(dir) {
+  const n = currentCapIdx + dir;
+  if (n >= 0 && n < mangaData.capitulos.length) openChapter(n);
+}
+
+async function load() {
+  const { data } = await DB.getManga();
+  mangaData = data.find(m => m.id === mangaId);
+  if (!mangaData) {
+    document.getElementById("detailView").innerHTML = `<div class="empty" style="padding:5rem"><span>😕</span><p>Manga no encontrado.</p></div>`;
+    return;
+  }
+  document.title = mangaData.titulo + " — LUMIOS";
+  document.getElementById("detailType").textContent = (mangaData.tipo||"manga").toUpperCase();
+  document.getElementById("detailTitle").textContent = mangaData.titulo;
+  document.getElementById("detailDesc").textContent = mangaData.sinopsis || "";
+  document.getElementById("detailTags").innerHTML = (mangaData.generos||[]).map(g=>`<span class="genre-tag">${g}</span>`).join("");
+  if (mangaData.cover) document.getElementById("detailCover").innerHTML = `<img src="${coverUrl(mangaData.cover)}" alt="${mangaData.titulo}">`;
+  const caps = mangaData.capitulos || [];
+  const list = document.getElementById("capsList");
+  if (!caps.length) {
+    list.innerHTML = `<div class="empty"><span>📖</span><p>Sin capítulos aún.</p></div>`;
+  } else {
+    list.innerHTML = caps.map((c,i) => `
+      <div class="cap-item" onclick="openChapter(${i})">
+        <div>
+          <div class="cap-num">Capítulo ${c.numero}</div>
+          <div class="cap-title-text">${c.titulo||""}</div>
+        </div>
+        <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
+      </div>`).join("");
+  }
+}
+load();
+</script>
+</body>
+</html>

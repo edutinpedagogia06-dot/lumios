@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ver Anime — LUMIOS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
+    <button class="nav-link" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
+    <button class="nav-link active" onclick="location.href='anime.html'"><i class="ti ti-device-tv"></i> Anime</button>
+    <button class="nav-link" onclick="location.href='peliculas.html'"><i class="ti ti-movie"></i> Películas</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" onclick="location.href='anime.html'"><i class="ti ti-arrow-left"></i> Volver</button>
+  </div>
+</nav>
+
+<div class="watch-layout">
+  <div>
+    <div style="background:#000;border-radius:var(--rl);overflow:hidden;margin-bottom:1.25rem">
+      <div class="player-wrap" id="playerWrap">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:16/9;color:var(--text3);gap:0.75rem">
+          <span style="font-size:3rem">🎬</span><p>Selecciona un episodio</p>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 0.25rem">
+      <div style="font-size:1.2rem;font-weight:900;margin-bottom:0.3rem" id="animeTitle">Cargando...</div>
+      <div style="font-size:0.82rem;color:var(--text3);margin-bottom:0.75rem" id="epLabel"></div>
+      <div class="genre-tags" id="animeTags" style="margin-bottom:0.75rem"></div>
+      <div style="font-size:0.85rem;color:var(--text2);line-height:1.65" id="animeDesc"></div>
+    </div>
+  </div>
+  <div class="eps-panel">
+    <div class="eps-header"><i class="ti ti-list"></i> Episodios</div>
+    <div class="eps-list" id="epsList"><div class="loading"><div class="spinner"></div></div></div>
+  </div>
+</div>
+
+<footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="github.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const animeId = params.get("id");
+let currentEpIdx = 0;
+
+function playEpisode(ep, idx) {
+  currentEpIdx = idx;
+  document.getElementById("playerWrap").innerHTML =
+    `<iframe src="https://drive.google.com/file/d/${ep.driveId}/preview" allowfullscreen allow="autoplay"></iframe>`;
+  document.getElementById("epLabel").textContent = `Episodio ${ep.numero}${ep.titulo?" — "+ep.titulo:""}`;
+  document.querySelectorAll(".ep-item").forEach((el,i) => el.classList.toggle("active", i===idx));
+  window.scrollTo(0,0);
+}
+
+async function load() {
+  const { data } = await DB.getAnime();
+  const anime = data.find(a => a.id === animeId);
+  if (!anime) {
+    document.querySelector(".watch-layout").innerHTML = `<div class="empty"><span>😕</span><p>Anime no encontrado.</p></div>`;
+    return;
+  }
+  document.title = anime.titulo + " — LUMIOS";
+  document.getElementById("animeTitle").textContent = anime.titulo;
+  document.getElementById("animeDesc").textContent = anime.sinopsis || "";
+  document.getElementById("animeTags").innerHTML = (anime.generos||[]).map(g=>`<span class="genre-tag">${g}</span>`).join("");
+  const eps = anime.episodios_list || [];
+  const list = document.getElementById("epsList");
+  if (!eps.length) {
+    list.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text3)">Sin episodios aún</div>`;
+  } else {
+    list.innerHTML = eps.map((ep,i) => `
+      <div class="ep-item" onclick='playEpisode(${JSON.stringify(ep).replace(/'/g,"&#39;")},${i})'>
+        <div class="ep-num">EP ${ep.numero}</div>
+        <div class="ep-title-text">${ep.titulo||"Episodio "+ep.numero}</div>
+        <i class="ti ti-player-play" style="color:var(--text3);font-size:14px;margin-left:auto;flex-shrink:0"></i>
+      </div>`).join("");
+    playEpisode(eps[0], 0);
+  }
+}
+load();
+</script>
+</body>
+</html>

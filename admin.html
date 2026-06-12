@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — LUMIOS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">LUM<em>IO</em>S</div>
+    <div class="login-sub">Panel de administración</div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input class="form-input" type="password" id="passInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="login()"><i class="ti ti-lock-open"></i> Entrar</button>
+    <div class="login-error" id="loginError">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="panelWrap" style="display:none">
+  <nav class="navbar">
+    <div class="logo"><a href="index.html">LUM<em>IO</em>S</a></div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
+      <button class="nav-link" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
+      <button class="nav-link" onclick="location.href='anime.html'"><i class="ti ti-device-tv"></i> Anime</button>
+      <button class="nav-link" onclick="location.href='peliculas.html'"><i class="ti ti-movie"></i> Películas</button>
+    </div>
+    <div class="nav-right">
+      <button class="btn btn-danger btn-sm" onclick="logout()"><i class="ti ti-logout"></i> Salir</button>
+    </div>
+  </nav>
+
+  <div style="max-width:900px;margin:0 auto;padding:2rem">
+    <div class="panel-header">
+      <div class="panel-title"><i class="ti ti-shield-lock"></i> Panel Admin — <span style="color:var(--red)">LUMIOS</span></div>
+      <div style="font-size:0.75rem;color:var(--text3)">¿Qué vas a publicar hoy?</div>
+    </div>
+
+    <!-- TIPO -->
+    <div class="type-grid">
+      <div class="type-card active" id="typeM" onclick="selectType('manga')">
+        <i class="ti ti-book"></i><span>Manga / Manhwa</span>
+      </div>
+      <div class="type-card" id="typeA" onclick="selectType('anime')">
+        <i class="ti ti-device-tv"></i><span>Anime</span>
+      </div>
+      <div class="type-card" id="typeP" onclick="selectType('pelicula')">
+        <i class="ti ti-movie"></i><span>Película</span>
+      </div>
+    </div>
+
+    <!-- FORM MANGA -->
+    <div class="form-section active" id="formManga">
+      <div class="form-section-title"><i class="ti ti-book"></i> Publicar Manga / Manhwa / Manhua</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Título *</label>
+          <input class="form-input" id="mTitulo" placeholder="Nombre del manga...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" id="mTipo">
+            <option value="manga">Manga</option>
+            <option value="manhwa">Manhwa</option>
+            <option value="manhua">Manhua</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Géneros (separados por coma)</label>
+          <input class="form-input" id="mGeneros" placeholder="Acción, Fantasía, Seinen...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rating (0-5)</label>
+          <input class="form-input" id="mRating" placeholder="4.8" type="number" min="0" max="5" step="0.1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sinopsis</label>
+        <textarea class="form-input" id="mSinopsis" placeholder="Descripción del manga..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Badge</label>
+          <select class="form-select" id="mBadge">
+            <option value="">Sin badge</option>
+            <option value="new">Nuevo</option>
+            <option value="hot">Hot</option>
+            <option value="end">Fin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Portada</label>
+          <input type="file" id="mCoverFile" accept="image/*" style="display:none" onchange="previewImg(this,'mPrev')">
+          <div class="upload-zone" onclick="document.getElementById('mCoverFile').click()">
+            <i class="ti ti-photo-up"></i> Subir portada
+          </div>
+          <img id="mPrev" class="upload-preview">
+        </div>
+      </div>
+      <!-- CAPÍTULOS -->
+      <div style="margin-top:1.25rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+          <div class="form-section-title" style="margin:0"><i class="ti ti-layers"></i> Capítulos</div>
+          <button class="btn btn-outline btn-sm" onclick="addCap()"><i class="ti ti-plus"></i> Añadir capítulo</button>
+        </div>
+        <div id="capsList"><div style="color:var(--text3);font-size:0.82rem;padding:0.5rem 0">Añade al menos un capítulo.</div></div>
+      </div>
+      <div class="progress-bar" id="mPBar"><div class="progress-fill" id="mPFill"></div></div>
+      <div class="progress-label" id="mPLabel"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:1.25rem" onclick="publishManga()">
+        <i class="ti ti-send"></i> Publicar Manga
+      </button>
+    </div>
+
+    <!-- FORM ANIME -->
+    <div class="form-section" id="formAnime">
+      <div class="form-section-title"><i class="ti ti-device-tv"></i> Publicar Anime</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Título *</label>
+          <input class="form-input" id="aTitulo" placeholder="Nombre del anime...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estado</label>
+          <select class="form-select" id="aEstado">
+            <option>En emisión</option>
+            <option>Completo</option>
+            <option>Pausado</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Género principal</label>
+          <input class="form-input" id="aGenero" placeholder="Acción">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Géneros (separados por coma)</label>
+          <input class="form-input" id="aGeneros" placeholder="Acción, Shonen...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sinopsis</label>
+        <textarea class="form-input" id="aSinopsis" placeholder="Descripción del anime..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Portada</label>
+        <input type="file" id="aCoverFile" accept="image/*" style="display:none" onchange="previewImg(this,'aPrev')">
+        <div class="upload-zone" onclick="document.getElementById('aCoverFile').click()">
+          <i class="ti ti-photo-up"></i> Subir portada
+        </div>
+        <img id="aPrev" class="upload-preview">
+      </div>
+      <!-- EPISODIOS -->
+      <div style="margin-top:1.25rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+          <div class="form-section-title" style="margin:0"><i class="ti ti-list"></i> Episodios</div>
+          <button class="btn btn-outline btn-sm" onclick="addEp()"><i class="ti ti-plus"></i> Añadir episodio</button>
+        </div>
+        <div class="hint" style="margin-bottom:0.75rem">Pega el ID de Google Drive de cada episodio (la parte del medio de la URL)</div>
+        <div id="epsList"><div style="color:var(--text3);font-size:0.82rem;padding:0.5rem 0">Añade al menos un episodio.</div></div>
+      </div>
+      <div class="progress-bar" id="aPBar"><div class="progress-fill" id="aPFill"></div></div>
+      <div class="progress-label" id="aPLabel"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:1.25rem" onclick="publishAnime()">
+        <i class="ti ti-send"></i> Publicar Anime
+      </button>
+    </div>
+
+    <!-- FORM PELÍCULA -->
+    <div class="form-section" id="formPelicula">
+      <div class="form-section-title"><i class="ti ti-movie"></i> Publicar Película</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Título *</label>
+          <input class="form-input" id="pTitulo" placeholder="Nombre de la película...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Año</label>
+          <input class="form-input" id="pAnio" placeholder="2024" type="number">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Duración</label>
+          <input class="form-input" id="pDuracion" placeholder="1h 54min">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Género principal</label>
+          <input class="form-input" id="pGenero" placeholder="Anime, Acción...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Géneros (separados por coma)</label>
+        <input class="form-input" id="pGeneros" placeholder="Acción, Aventura...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sinopsis</label>
+        <textarea class="form-input" id="pSinopsis" placeholder="Descripción de la película..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ID de Google Drive del video *</label>
+          <input class="form-input" id="pDriveId" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgm...">
+          <div class="hint">La parte del medio de la URL de Drive: drive.google.com/file/d/<b>ESTE_ID</b>/view</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Portada</label>
+          <input type="file" id="pCoverFile" accept="image/*" style="display:none" onchange="previewImg(this,'pPrev')">
+          <div class="upload-zone" onclick="document.getElementById('pCoverFile').click()">
+            <i class="ti ti-photo-up"></i> Subir portada
+          </div>
+          <img id="pPrev" class="upload-preview">
+        </div>
+      </div>
+      <div class="progress-bar" id="pPBar"><div class="progress-fill" id="pPFill"></div></div>
+      <div class="progress-label" id="pPLabel"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:1.25rem" onclick="publishPelicula()">
+        <i class="ti ti-send"></i> Publicar Película
+      </button>
+    </div>
+
+    <!-- LISTA PUBLICADO -->
+    <div style="margin-top:1rem">
+      <div class="section-title" style="margin-bottom:1.25rem">Contenido publicado</div>
+      <div class="tabs">
+        <button class="tab active" onclick="setListTab(this,'manga')">Manga</button>
+        <button class="tab" onclick="setListTab(this,'anime')">Anime</button>
+        <button class="tab" onclick="setListTab(this,'pelicula')">Películas</button>
+      </div>
+      <div id="contentList"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="github.js"></script>
+<script>
+let caps=[], eps=[], currentListTab="manga";
+
+// ── LOGIN ──
+function login() {
+  if (document.getElementById("passInput").value === CFG.adminPass) {
+    sessionStorage.setItem("lumios_ok","1");
+    document.getElementById("loginWrap").style.display="none";
+    document.getElementById("panelWrap").style.display="block";
+    loadContentList();
+  } else {
+    const e=document.getElementById("loginError");
+    e.style.display="block";
+    setTimeout(()=>e.style.display="none",2500);
+  }
+}
+function logout(){sessionStorage.removeItem("lumios_ok");location.reload();}
+if(sessionStorage.getItem("lumios_ok")==="1"){
+  document.getElementById("loginWrap").style.display="none";
+  document.getElementById("panelWrap").style.display="block";
+  loadContentList();
+}
+
+// ── TIPO ──
+function selectType(t) {
+  const map={manga:"M",anime:"A",pelicula:"P"};
+  const fmap={manga:"Manga",anime:"Anime",pelicula:"Pelicula"};
+  ["manga","anime","pelicula"].forEach(x=>{
+    document.getElementById("type"+map[x]).classList.remove("active");
+    document.getElementById("form"+fmap[x]).classList.remove("active");
+  });
+  document.getElementById("type"+map[t]).classList.add("active");
+  document.getElementById("form"+fmap[t]).classList.add("active");
+}
+
+// ── PREVIEW ──
+function previewImg(input,prevId){
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{const img=document.getElementById(prevId);img.src=e.target.result;img.style.display="block";};
+  r.readAsDataURL(f);
+}
+
+// ── CAPS ──
+function addCap(){caps.push({numero:caps.length+1,titulo:"",paginas:[]});renderCaps();}
+function removeCap(i){caps.splice(i,1);renderCaps();}
+function addPage(ci){
+  const inp=document.getElementById("pi_"+ci);
+  const v=inp.value.trim(); if(!v) return;
+  caps[ci].paginas.push(v); inp.value=""; renderCaps();
+}
+function removePage(ci,pi){caps[ci].paginas.splice(pi,1);renderCaps();}
+function renderCaps(){
+  const el=document.getElementById("capsList");
+  if(!caps.length){el.innerHTML=`<div style="color:var(--text3);font-size:0.82rem;padding:0.5rem 0">Añade al menos un capítulo.</div>`;return;}
+  el.innerHTML=caps.map((c,i)=>`
+    <div class="cap-row">
+      <div class="cap-row-header">
+        <span class="cap-num-badge">CAP ${c.numero}</span>
+        <input class="form-input" style="flex:1" placeholder="Título (opcional)" value="${c.titulo}" oninput="caps[${i}].titulo=this.value">
+        <button class="btn btn-danger btn-sm" onclick="removeCap(${i})"><i class="ti ti-trash"></i></button>
+      </div>
+      <div style="font-size:0.73rem;color:var(--text3);margin-bottom:0.4rem">IDs de Google Drive de las imágenes/páginas:</div>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
+        <input class="form-input" id="pi_${i}" placeholder="ID de Drive de la imagen...">
+        <button class="btn btn-outline btn-sm" onclick="addPage(${i})"><i class="ti ti-plus"></i></button>
+      </div>
+      <div class="pages-list">${(c.paginas||[]).map((pid,pi)=>`
+        <div class="page-chip">Pág ${pi+1}: ${pid.slice(0,10)}… <button onclick="removePage(${i},${pi})">✕</button></div>
+      `).join("")}</div>
+    </div>`).join("");
+}
+
+// ── EPISODIOS ──
+function addEp(){eps.push({numero:eps.length+1,titulo:"",driveId:""});renderEps();}
+function removeEp(i){eps.splice(i,1);renderEps();}
+function renderEps(){
+  const el=document.getElementById("epsList");
+  if(!eps.length){el.innerHTML=`<div style="color:var(--text3);font-size:0.82rem;padding:0.5rem 0">Añade al menos un episodio.</div>`;return;}
+  el.innerHTML=eps.map((ep,i)=>`
+    <div class="ep-row">
+      <div class="form-group" style="margin:0"><label class="form-label">Ep.#</label>
+        <input class="form-input" type="number" value="${ep.numero}" oninput="eps[${i}].numero=+this.value"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Título</label>
+        <input class="form-input" placeholder="Título del episodio" value="${ep.titulo}" oninput="eps[${i}].titulo=this.value"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">ID Google Drive</label>
+        <input class="form-input" placeholder="1BxiMV..." value="${ep.driveId}" oninput="eps[${i}].driveId=this.value"></div>
+      <button class="btn btn-danger btn-sm" style="align-self:end" onclick="removeEp(${i})"><i class="ti ti-trash"></i></button>
+    </div>`).join("");
+}
+
+// ── SUBIR COVER ──
+async function uploadCover(file, name) {
+  return new Promise(resolve=>{
+    const r=new FileReader();
+    r.onload=async e=>{
+      const b64=e.target.result.split(",")[1];
+      const path=`covers/${name}`;
+      const url=await GH.uploadImage(path,b64,null);
+      resolve(url?path:null);
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+// ── PROGRESO ──
+function setProg(p,pct,label){
+  document.getElementById(p+"PBar").style.display="block";
+  document.getElementById(p+"PFill").style.width=pct+"%";
+  document.getElementById(p+"PLabel").textContent=label;
+}
+
+// ── PUBLISH MANGA ──
+async function publishManga(){
+  const titulo=document.getElementById("mTitulo").value.trim();
+  if(!titulo)return showToast("El título es obligatorio","error");
+  setProg("m",10,"Preparando...");
+  const id=DB.genId();
+  let cover=null;
+  const f=document.getElementById("mCoverFile").files[0];
+  if(f){setProg("m",30,"Subiendo portada...");cover=await uploadCover(f,id+"_m."+f.name.split(".").pop());}
+  setProg("m",60,"Guardando...");
+  const {data,sha}=await DB.getManga();
+  data.unshift({id,titulo,
+    tipo:document.getElementById("mTipo").value,
+    generos:document.getElementById("mGeneros").value.split(",").map(g=>g.trim()).filter(Boolean),
+    rating:document.getElementById("mRating").value||"—",
+    sinopsis:document.getElementById("mSinopsis").value.trim(),
+    badge:document.getElementById("mBadge").value||null,
+    cover,capitulos:caps.map(c=>({...c})),
+    creado:new Date().toISOString()
+  });
+  setProg("m",85,"Publicando en GitHub...");
+  if(await DB.saveManga(data,sha)){
+    setProg("m",100,"¡Publicado!");showToast("✅ Manga publicado");
+    document.getElementById("mTitulo").value="";document.getElementById("mGeneros").value="";
+    document.getElementById("mRating").value="";document.getElementById("mSinopsis").value="";
+    document.getElementById("mBadge").value="";document.getElementById("mPrev").style.display="none";
+    document.getElementById("mCoverFile").value="";caps=[];renderCaps();loadContentList();
+  }else{showToast("Error. Revisa tu token en config.js","error");}
+}
+
+// ── PUBLISH ANIME ──
+async function publishAnime(){
+  const titulo=document.getElementById("aTitulo").value.trim();
+  if(!titulo)return showToast("El título es obligatorio","error");
+  if(eps.some(e=>!e.driveId))return showToast("Todos los episodios necesitan ID de Drive","error");
+  setProg("a",10,"Preparando...");
+  const id=DB.genId();
+  let cover=null;
+  const f=document.getElementById("aCoverFile").files[0];
+  if(f){setProg("a",30,"Subiendo portada...");cover=await uploadCover(f,id+"_a."+f.name.split(".").pop());}
+  setProg("a",60,"Guardando...");
+  const {data,sha}=await DB.getAnime();
+  data.unshift({id,titulo,
+    estado:document.getElementById("aEstado").value,
+    genero:document.getElementById("aGenero").value.trim(),
+    generos:document.getElementById("aGeneros").value.split(",").map(g=>g.trim()).filter(Boolean),
+    sinopsis:document.getElementById("aSinopsis").value.trim(),
+    episodios:eps.length,episodios_list:eps.map(e=>({...e})),
+    cover,creado:new Date().toISOString()
+  });
+  setProg("a",85,"Publicando...");
+  if(await DB.saveAnime(data,sha)){
+    setProg("a",100,"¡Publicado!");showToast("✅ Anime publicado");
+    document.getElementById("aTitulo").value="";document.getElementById("aGenero").value="";
+    document.getElementById("aGeneros").value="";document.getElementById("aSinopsis").value="";
+    document.getElementById("aPrev").style.display="none";document.getElementById("aCoverFile").value="";
+    eps=[];renderEps();loadContentList();
+  }else{showToast("Error. Revisa tu token en config.js","error");}
+}
+
+// ── PUBLISH PELICULA ──
+async function publishPelicula(){
+  const titulo=document.getElementById("pTitulo").value.trim();
+  const driveId=document.getElementById("pDriveId").value.trim();
+  if(!titulo)return showToast("El título es obligatorio","error");
+  if(!driveId)return showToast("El ID de Google Drive es obligatorio","error");
+  setProg("p",10,"Preparando...");
+  const id=DB.genId();
+  let cover=null;
+  const f=document.getElementById("pCoverFile").files[0];
+  if(f){setProg("p",30,"Subiendo portada...");cover=await uploadCover(f,id+"_p."+f.name.split(".").pop());}
+  setProg("p",60,"Guardando...");
+  const {data,sha}=await DB.getPeliculas();
+  data.unshift({id,titulo,driveId,
+    anio:document.getElementById("pAnio").value||"",
+    duracion:document.getElementById("pDuracion").value.trim(),
+    genero:document.getElementById("pGenero").value.trim(),
+    generos:document.getElementById("pGeneros").value.split(",").map(g=>g.trim()).filter(Boolean),
+    sinopsis:document.getElementById("pSinopsis").value.trim(),
+    cover,creado:new Date().toISOString()
+  });
+  setProg("p",85,"Publicando...");
+  if(await DB.savePeliculas(data,sha)){
+    setProg("p",100,"¡Publicado!");showToast("✅ Película publicada");
+    ["pTitulo","pAnio","pDuracion","pGenero","pGeneros","pSinopsis","pDriveId"].forEach(x=>document.getElementById(x).value="");
+    document.getElementById("pPrev").style.display="none";document.getElementById("pCoverFile").value="";
+    loadContentList();
+  }else{showToast("Error. Revisa tu token en config.js","error");}
+}
+
+// ── LISTA ──
+async function loadContentList(){
+  const el=document.getElementById("contentList");
+  el.innerHTML=`<div class="loading"><div class="spinner"></div></div>`;
+  let data=[];
+  if(currentListTab==="manga"){const r=await DB.getManga();data=r.data;}
+  else if(currentListTab==="anime"){const r=await DB.getAnime();data=r.data;}
+  else{const r=await DB.getPeliculas();data=r.data;}
+  if(!data.length){el.innerHTML=`<div class="empty"><span>📭</span><p>Sin contenido publicado aún.</p></div>`;return;}
+  el.innerHTML=data.map(item=>`
+    <div class="content-item">
+      <div class="content-thumb">${item.cover?`<img src="${GCS}${item.cover}" alt="">`:"📖"}</div>
+      <div class="content-info">
+        <div class="content-title">${item.titulo}</div>
+        <div class="content-meta">${item.capitulos?item.capitulos.length+" caps":item.episodios?item.episodios+" eps":item.duracion||""} · ${new Date(item.creado||Date.now()).toLocaleDateString()}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deleteItem('${item.id}')"><i class="ti ti-trash"></i></button>
+    </div>`).join("");
+}
+async function deleteItem(id){
+  if(!confirm("¿Eliminar este contenido?"))return;
+  let g,s;
+  if(currentListTab==="manga"){g=()=>DB.getManga();s=(d,sh)=>DB.saveManga(d,sh);}
+  else if(currentListTab==="anime"){g=()=>DB.getAnime();s=(d,sh)=>DB.saveAnime(d,sh);}
+  else{g=()=>DB.getPeliculas();s=(d,sh)=>DB.savePeliculas(d,sh);}
+  const{data,sha}=await g();
+  if(await s(data.filter(i=>i.id!==id),sha)){showToast("Eliminado");loadContentList();}
+  else showToast("Error al eliminar","error");
+}
+function setListTab(btn,tab){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");currentListTab=tab;loadContentList();
+}
+
+renderCaps();renderEps();
+</script>
+</body>
+</html>

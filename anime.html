@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime — LUMIOS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
+    <button class="nav-link" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
+    <button class="nav-link active" onclick="location.href='anime.html'"><i class="ti ti-device-tv"></i> Anime</button>
+    <button class="nav-link" onclick="location.href='peliculas.html'"><i class="ti ti-movie"></i> Películas</button>
+  </div>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <i class="ti ti-search search-icon"></i>
+      <input class="search-input" id="searchInput" placeholder="Buscar anime..." type="text" oninput="renderGrid()">
+    </div>
+    <button class="btn-icon" onclick="location.href='admin.html'" title="Panel Admin"><i class="ti ti-shield-lock"></i></button>
+  </div>
+</nav>
+<div class="page-head"><h2>Anime</h2><p id="countLabel">Cargando...</p></div>
+<div class="section" style="padding-top:1.5rem">
+  <div class="tabs">
+    <button class="tab active" onclick="setTab(this,'todos')">Todos</button>
+    <button class="tab" onclick="setTab(this,'emision')">En emisión</button>
+    <button class="tab" onclick="setTab(this,'completo')">Completos</button>
+  </div>
+  <div id="grid" class="video-grid">
+    <div class="loading"><div class="spinner"></div><br>Cargando...</div>
+  </div>
+</div>
+<footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="github.js"></script>
+<script>
+let allData=[], currentTab="todos";
+function cardHTML(a) {
+  const img = coverUrl(a.cover);
+  return `<div class="video-card" onclick="location.href='ver-anime.html?id=${a.id}'">
+    <div class="video-thumb g2">${img?`<img src="${img}" alt="${a.titulo}" loading="lazy">`:"🎬"}
+      <div class="play-overlay"><div class="play-btn"><i class="ti ti-player-play"></i></div></div>
+    </div>
+    <div class="video-info"><div class="video-title">${a.titulo}</div>
+    <div class="video-sub">${a.episodios||0} eps · ${a.estado||""} · ${a.genero||""}</div></div>
+  </div>`;
+}
+function renderGrid() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  let items = allData;
+  if(currentTab==="emision") items=items.filter(a=>a.estado==="En emisión");
+  if(currentTab==="completo") items=items.filter(a=>a.estado==="Completo");
+  if(q) items=items.filter(a=>a.titulo.toLowerCase().includes(q));
+  document.getElementById("grid").innerHTML = items.length ? items.map(cardHTML).join("") : `<div class="empty"><span>🎬</span><p>No se encontró nada.</p></div>`;
+  document.getElementById("countLabel").textContent = `${items.length} anime${items.length!==1?"s":""} disponible${items.length!==1?"s":""}`;
+}
+function setTab(btn,tab){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));btn.classList.add("active");currentTab=tab;renderGrid();}
+async function load(){const{data}=await DB.getAnime();allData=data;renderGrid();}
+load();
+</script>
+</body>
+</html>
