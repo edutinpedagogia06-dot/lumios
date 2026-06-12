@@ -60,11 +60,29 @@ const DB = {
   async getManga()     { return GH.readJSON("manga.json"); },
   async getAnime()     { return GH.readJSON("anime.json"); },
   async getPeliculas() { return GH.readJSON("peliculas.json"); },
+  async getSite()      { return GH.readJSON("site.json"); },
   async saveManga(d,s)     { return GH.writeJSON("manga.json", d, s); },
   async saveAnime(d,s)     { return GH.writeJSON("anime.json", d, s); },
   async savePeliculas(d,s) { return GH.writeJSON("peliculas.json", d, s); },
+  async saveSite(d,s)      { return GH.writeJSON("site.json", d, s); },
   genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 };
+
+// Aplica el tema (colores) guardado en site.json a las variables CSS
+async function applyTheme() {
+  try {
+    const { data } = await DB.getSite();
+    if (!data || Array.isArray(data)) return data; // site.json vacío = []
+    const root = document.documentElement.style;
+    if (data.colorRed)  root.setProperty("--red", data.colorRed);
+    if (data.colorRed2) root.setProperty("--red2", data.colorRed2);
+    if (data.colorBg)   root.setProperty("--bg", data.colorBg);
+    if (data.colorBg2)  root.setProperty("--bg2", data.colorBg2);
+    if (data.colorText) root.setProperty("--text", data.colorText);
+    return data;
+  } catch(e) { return null; }
+}
+applyTheme();
 
 function coverUrl(c) { return c ? GCS + c : ""; }
 

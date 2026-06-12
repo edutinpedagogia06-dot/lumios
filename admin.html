@@ -46,7 +46,7 @@
     </div>
 
     <!-- TIPO -->
-    <div class="type-grid">
+    <div class="type-grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="type-card active" id="typeM" onclick="selectType('manga')">
         <i class="ti ti-book"></i><span>Manga / Manhwa</span>
       </div>
@@ -55,6 +55,9 @@
       </div>
       <div class="type-card" id="typeP" onclick="selectType('pelicula')">
         <i class="ti ti-movie"></i><span>Película</span>
+      </div>
+      <div class="type-card" id="typeApariencia" onclick="selectType('apariencia')">
+        <i class="ti ti-palette"></i><span>Apariencia</span>
       </div>
     </div>
 
@@ -231,6 +234,86 @@
       </button>
     </div>
 
+    <!-- FORM APARIENCIA -->
+    <div class="form-section" id="formApariencia">
+      <div class="form-section-title"><i class="ti ti-palette"></i> Apariencia del sitio</div>
+
+      <div class="hint" style="margin-bottom:1.25rem">Estos cambios afectan toda la página: colores, textos del inicio e imagen de fondo del Hero.</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Color principal (rojo)</label>
+          <input class="form-input" id="siColorRed" type="color" style="height:42px;padding:0.3rem" value="#E8001E">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Color principal hover</label>
+          <input class="form-input" id="siColorRed2" type="color" style="height:42px;padding:0.3rem" value="#FF1A35">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Color de fondo</label>
+          <input class="form-input" id="siColorBg" type="color" style="height:42px;padding:0.3rem" value="#0A0A0C">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Color de fondo secundario</label>
+          <input class="form-input" id="siColorBg2" type="color" style="height:42px;padding:0.3rem" value="#111116">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color de texto</label>
+        <input class="form-input" id="siColorText" type="color" style="height:42px;padding:0.3rem" value="#F0F0F0">
+      </div>
+
+      <hr style="margin:1.5rem 0">
+
+      <div class="form-group">
+        <label class="form-label">Título Hero — línea 1</label>
+        <input class="form-input" id="siTitle1" placeholder="El universo del">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Título Hero — línea 2 (resaltada en rojo)</label>
+        <input class="form-input" id="siTitle2" placeholder="manga y anime">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Título Hero — línea 3</label>
+        <input class="form-input" id="siTitle3" placeholder="en un solo lugar">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción Hero</label>
+        <textarea class="form-input" id="siDesc" placeholder="Manga, manhwa, anime y películas..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Texto botón 1</label>
+          <input class="form-input" id="siBtn1" placeholder="Explorar Manga">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Texto botón 2</label>
+          <input class="form-input" id="siBtn2" placeholder="Ver Anime">
+        </div>
+      </div>
+
+      <hr style="margin:1.5rem 0">
+
+      <div class="form-group">
+        <label class="form-label">Imagen de fondo del Hero (opcional)</label>
+        <input type="file" id="siHeroImgFile" accept="image/*" style="display:none" onchange="previewImg(this,'siHeroPrev')">
+        <div class="upload-zone" onclick="document.getElementById('siHeroImgFile').click()">
+          <i class="ti ti-photo-up"></i> Subir imagen de fondo
+        </div>
+        <img id="siHeroPrev" class="upload-preview">
+        <div class="hint" id="siHeroCurrentLabel"></div>
+        <button class="btn btn-outline btn-sm" style="margin-top:0.5rem" onclick="removeHeroImage()"><i class="ti ti-trash"></i> Quitar imagen de fondo</button>
+      </div>
+
+      <div class="progress-bar" id="siPBar"><div class="progress-fill" id="siPFill"></div></div>
+      <div class="progress-label" id="siPLabel"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:1.25rem" onclick="saveAppearance()">
+        <i class="ti ti-device-floppy"></i> Guardar Apariencia
+      </button>
+    </div>
+
     <!-- LISTA PUBLICADO -->
     <div style="margin-top:1rem">
       <div class="section-title" style="margin-bottom:1.25rem">Contenido publicado</div>
@@ -272,9 +355,9 @@ if(sessionStorage.getItem("lumios_ok")==="1"){
 
 // ── TIPO ──
 function selectType(t) {
-  const map={manga:"M",anime:"A",pelicula:"P"};
-  const fmap={manga:"Manga",anime:"Anime",pelicula:"Pelicula"};
-  ["manga","anime","pelicula"].forEach(x=>{
+  const map={manga:"M",anime:"A",pelicula:"P",apariencia:"Apariencia"};
+  const fmap={manga:"Manga",anime:"Anime",pelicula:"Pelicula",apariencia:"Apariencia"};
+  ["manga","anime","pelicula","apariencia"].forEach(x=>{
     document.getElementById("type"+map[x]).classList.remove("active");
     document.getElementById("form"+fmap[x]).classList.remove("active");
   });
@@ -484,6 +567,78 @@ function setListTab(btn,tab){
 }
 
 renderCaps();renderEps();
+
+// ── APARIENCIA ──
+let siteHeroImagePath = null;
+let siteSha = null;
+
+async function loadAppearance() {
+  const { data, sha } = await DB.getSite();
+  siteSha = sha;
+  if (!data || Array.isArray(data)) return; // sin config previa
+  if (data.colorRed) document.getElementById("siColorRed").value = data.colorRed;
+  if (data.colorRed2) document.getElementById("siColorRed2").value = data.colorRed2;
+  if (data.colorBg) document.getElementById("siColorBg").value = data.colorBg;
+  if (data.colorBg2) document.getElementById("siColorBg2").value = data.colorBg2;
+  if (data.colorText) document.getElementById("siColorText").value = data.colorText;
+  if (data.heroTitle1) document.getElementById("siTitle1").value = data.heroTitle1;
+  if (data.heroTitle2) document.getElementById("siTitle2").value = data.heroTitle2;
+  if (data.heroTitle3) document.getElementById("siTitle3").value = data.heroTitle3;
+  if (data.heroDesc) document.getElementById("siDesc").value = data.heroDesc;
+  if (data.heroBtn1) document.getElementById("siBtn1").value = data.heroBtn1;
+  if (data.heroBtn2) document.getElementById("siBtn2").value = data.heroBtn2;
+  if (data.heroImage) {
+    siteHeroImagePath = data.heroImage;
+    document.getElementById("siHeroCurrentLabel").textContent = "Imagen actual: " + data.heroImage;
+    document.getElementById("siHeroPrev").src = GCS + data.heroImage;
+    document.getElementById("siHeroPrev").style.display = "block";
+  }
+}
+
+function removeHeroImage() {
+  siteHeroImagePath = null;
+  document.getElementById("siHeroImgFile").value = "";
+  document.getElementById("siHeroPrev").style.display = "none";
+  document.getElementById("siHeroCurrentLabel").textContent = "Se quitará la imagen al guardar.";
+}
+
+async function saveAppearance() {
+  setProg("si", 15, "Preparando...");
+  let heroImage = siteHeroImagePath;
+  const f = document.getElementById("siHeroImgFile").files[0];
+  if (f) {
+    setProg("si", 40, "Subiendo imagen de fondo...");
+    heroImage = await uploadCover(f, "hero_" + DB.genId() + "." + f.name.split(".").pop());
+  }
+  setProg("si", 70, "Guardando configuración...");
+  const site = {
+    colorRed: document.getElementById("siColorRed").value,
+    colorRed2: document.getElementById("siColorRed2").value,
+    colorBg: document.getElementById("siColorBg").value,
+    colorBg2: document.getElementById("siColorBg2").value,
+    colorText: document.getElementById("siColorText").value,
+    heroTitle1: document.getElementById("siTitle1").value.trim(),
+    heroTitle2: document.getElementById("siTitle2").value.trim(),
+    heroTitle3: document.getElementById("siTitle3").value.trim(),
+    heroDesc: document.getElementById("siDesc").value.trim(),
+    heroBtn1: document.getElementById("siBtn1").value.trim(),
+    heroBtn2: document.getElementById("siBtn2").value.trim(),
+    heroImage
+  };
+  setProg("si", 90, "Publicando en GitHub...");
+  const ok = await DB.saveSite(site, siteSha);
+  if (ok) {
+    setProg("si", 100, "¡Guardado!");
+    showToast("✅ Apariencia actualizada");
+    applyTheme();
+    siteHeroImagePath = heroImage;
+    loadAppearance();
+  } else {
+    showToast("Error al guardar. Revisa tu token.", "error");
+  }
+}
+
+loadAppearance();
 </script>
 </body>
 </html>
