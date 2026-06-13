@@ -92,6 +92,19 @@
         <label class="form-label">Sinopsis</label>
         <textarea class="form-input" id="mSinopsis" placeholder="Descripción del manga..."></textarea>
       </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Universo / Saga (opcional)</label>
+          <input class="form-input" id="mUniverso" placeholder="Ej: Saga Shinwa">
+          <div class="hint">Títulos con el mismo nombre de universo se mostrarán relacionados entre sí</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Orden cronológico</label>
+          <input class="form-input" id="mOrden" type="number" min="1" placeholder="1">
+          <div class="hint">Posición en la línea de tiempo del universo</div>
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Badge</label>
@@ -157,6 +170,19 @@
         <label class="form-label">Sinopsis</label>
         <textarea class="form-input" id="aSinopsis" placeholder="Descripción del anime..."></textarea>
       </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Universo / Saga (opcional)</label>
+          <input class="form-input" id="aUniverso" placeholder="Ej: Saga Shinwa">
+          <div class="hint">Títulos con el mismo nombre de universo se mostrarán relacionados entre sí</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Orden cronológico</label>
+          <input class="form-input" id="aOrden" type="number" min="1" placeholder="1">
+          <div class="hint">Posición en la línea de tiempo del universo</div>
+        </div>
+      </div>
       <div class="form-group">
         <label class="form-label">Portada</label>
         <input type="file" id="aCoverFile" accept="image/*" style="display:none" onchange="previewImg(this,'aPrev')">
@@ -211,6 +237,19 @@
       <div class="form-group">
         <label class="form-label">Sinopsis</label>
         <textarea class="form-input" id="pSinopsis" placeholder="Descripción de la película..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Universo / Saga (opcional)</label>
+          <input class="form-input" id="pUniverso" placeholder="Ej: Saga Shinwa">
+          <div class="hint">Títulos con el mismo nombre de universo se mostrarán relacionados entre sí</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Orden cronológico</label>
+          <input class="form-input" id="pOrden" type="number" min="1" placeholder="1">
+          <div class="hint">Posición en la línea de tiempo del universo</div>
+        </div>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -459,6 +498,8 @@ async function publishManga(){
     rating:document.getElementById("mRating").value||"—",
     sinopsis:document.getElementById("mSinopsis").value.trim(),
     badge:document.getElementById("mBadge").value||null,
+    universo:document.getElementById("mUniverso").value.trim()||null,
+    orden:document.getElementById("mOrden").value?+document.getElementById("mOrden").value:null,
     cover,capitulos:caps.map(c=>({...c})),
     creado:new Date().toISOString()
   });
@@ -489,6 +530,8 @@ async function publishAnime(){
     genero:document.getElementById("aGenero").value.trim(),
     generos:document.getElementById("aGeneros").value.split(",").map(g=>g.trim()).filter(Boolean),
     sinopsis:document.getElementById("aSinopsis").value.trim(),
+    universo:document.getElementById("aUniverso").value.trim()||null,
+    orden:document.getElementById("aOrden").value?+document.getElementById("aOrden").value:null,
     episodios:eps.length,episodios_list:eps.map(e=>({...e})),
     cover,creado:new Date().toISOString()
   });
@@ -521,6 +564,8 @@ async function publishPelicula(){
     genero:document.getElementById("pGenero").value.trim(),
     generos:document.getElementById("pGeneros").value.split(",").map(g=>g.trim()).filter(Boolean),
     sinopsis:document.getElementById("pSinopsis").value.trim(),
+    universo:document.getElementById("pUniverso").value.trim()||null,
+    orden:document.getElementById("pOrden").value?+document.getElementById("pOrden").value:null,
     cover,creado:new Date().toISOString()
   });
   setProg("p",85,"Publicando...");

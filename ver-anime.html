@@ -51,6 +51,7 @@
     <div class="eps-list" id="epsList"><div class="loading"><div class="spinner"></div></div></div>
   </div>
 </div>
+<div id="universeContainer"></div>
 
 <footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
 <div class="toast" id="toast"></div>
@@ -93,6 +94,12 @@ async function load() {
         <i class="ti ti-player-play" style="color:var(--text3);font-size:14px;margin-left:auto;flex-shrink:0"></i>
       </div>`).join("");
     playEpisode(eps[0], 0);
+  }
+
+  // Universo / línea de tiempo
+  if (anime.universo) {
+    const items = await getUniverseItems(anime.universo);
+    document.getElementById("universeContainer").innerHTML = renderUniverseSection(items, anime.id);
   }
 }
 load();

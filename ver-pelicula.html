@@ -62,6 +62,7 @@
     </div>
   </div>
 </div>
+<div id="universeContainer"></div>
 
 <footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
 <div class="toast" id="toast"></div>
@@ -88,6 +89,12 @@ async function load() {
   document.getElementById("movieDesc").textContent = p.sinopsis||"";
   document.getElementById("movieTags").innerHTML = (p.generos||[]).map(g=>`<span class="genre-tag">${g}</span>`).join("");
   if (p.cover) document.getElementById("movieCover").innerHTML = `<img src="${coverUrl(p.cover)}" alt="${p.titulo}">`;
+
+  // Universo / línea de tiempo
+  if (p.universo) {
+    const items = await getUniverseItems(p.universo);
+    document.getElementById("universeContainer").innerHTML = renderUniverseSection(items, p.id);
+  }
 }
 load();
 </script>

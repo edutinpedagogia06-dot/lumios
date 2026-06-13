@@ -245,11 +245,19 @@ hr{border:none;border-top:1px solid var(--border)}
   .detail-inner{grid-template-columns:1fr;text-align:center}
   .detail-cover{margin:0 auto}
   .form-row{grid-template-columns:1fr}
-  .ep-row{grid-template-columns:1fr 1fr}
+  .ep-row{grid-template-columns:1fr;gap:0.5rem}
+  .ep-row .form-group{margin:0}
   .section{padding:2rem 1rem}
   .cards-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.6rem}
   .video-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.75rem}
-  .type-grid{grid-template-columns:repeat(2,1fr)}
+  .type-grid{grid-template-columns:repeat(2,1fr);gap:0.6rem}
+  .type-card{padding:1rem 0.5rem}
+  .type-card i{font-size:1.5rem}
+  .type-card span{font-size:0.68rem}
+  .panel-header{flex-direction:column;align-items:flex-start;gap:0.5rem}
+  .form-section{padding:1.1rem}
+  .content-item{flex-wrap:wrap}
+  .content-info{min-width:120px}
 }
 
 /* Bottom nav móvil */
@@ -264,4 +272,32 @@ hr{border:none;border-top:1px solid var(--border)}
   .mobile-nav a.active{color:var(--red)}
   .mobile-nav i{font-size:18px}
   body{padding-bottom:60px}
+}
+
+/* TRANSICIONES CINEMATOGRÁFICAS */
+body{animation:lumiosIn 0.4s ease}
+@keyframes lumiosIn{from{opacity:0;filter:brightness(0.3)}to{opacity:1;filter:brightness(1)}}
+.page-exit{animation:lumiosOut 0.25s ease forwards}
+@keyframes lumiosOut{from{opacity:1;filter:brightness(1)}to{opacity:0;filter:brightness(0.3)}}
+
+/* UNIVERSO / TIMELINE */
+.universe-section{max-width:1000px;margin:0 auto;padding:0 2rem 2rem}
+.universe-title{font-size:0.95rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:0.6rem;margin-bottom:1.25rem}
+.universe-title::before{content:'';width:4px;height:1em;background:var(--red);border-radius:2px}
+.timeline{position:relative;padding-left:1.75rem}
+.timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--border2)}
+.timeline-item{position:relative;display:flex;align-items:center;gap:1rem;padding:0.6rem 0;cursor:pointer;border-radius:var(--r);transition:background 0.2s}
+.timeline-item:hover{background:var(--bg2)}
+.timeline-item::before{content:'';position:absolute;left:-1.75rem;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:var(--bg3);border:2px solid var(--border2)}
+.timeline-item.current::before{background:var(--red);border-color:var(--red);box-shadow:0 0 0 4px rgba(232,0,30,0.15)}
+.timeline-thumb{width:46px;height:64px;border-radius:6px;overflow:hidden;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.timeline-thumb img{width:100%;height:100%;object-fit:cover}
+.timeline-info{flex:1;min-width:0}
+.timeline-order{font-size:0.65rem;color:var(--red);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.timeline-name{font-size:0.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timeline-type{font-size:0.7rem;color:var(--text3);text-transform:capitalize}
+.timeline-current-badge{background:var(--red);color:#fff;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:1px;text-transform:uppercase;margin-left:auto;flex-shrink:0}
+
+@media(max-width:768px){
+  @keyframes lumiosIn{from{opacity:0}to{opacity:1}}
 }

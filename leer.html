@@ -58,6 +58,7 @@
     <div class="section-title" style="margin-bottom:1.25rem">Capítulos</div>
     <div id="capsList"><div class="loading"><div class="spinner"></div><br>Cargando...</div></div>
   </div>
+  <div id="universeContainer"></div>
 </div>
 
 <!-- LECTOR -->
@@ -162,6 +163,12 @@ async function load() {
         </div>
         <i class="ti ti-chevron-right" style="color:var(--text3)"></i>
       </div>`).join("");
+  }
+
+  // Universo / línea de tiempo
+  if (mangaData.universo) {
+    const items = await getUniverseItems(mangaData.universo);
+    document.getElementById("universeContainer").innerHTML = renderUniverseSection(items, mangaData.id);
   }
 }
 load();
