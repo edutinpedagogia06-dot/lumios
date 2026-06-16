@@ -1,1 +1,48 @@
-[]
+[
+  {
+    "id": "mqh2dnqfu444",
+    "titulo": "Blue Box",
+    "tipo": "manga",
+    "generos": [
+      "Romance"
+    ],
+    "rating": "5",
+    "sinopsis": "un chico deportista que entrena en el gimnasio todas las mañanas y se enamora en secreto de su senpai del equipo de baloncesto.",
+    "badge": null,
+    "universo": null,
+    "orden": 1,
+    "cover": "covers/mqh2dnqfu444_m.jpg",
+    "capitulos": [
+      {
+        "numero": 1,
+        "titulo": "Oneshot",
+        "paginas": [
+          "1tXlVQK21CAtT_fTfxoZ2yu0sszDWqnGa"
+        ]
+      }
+    ],
+    "creado": "2026-06-16T19:58:03.701Z"
+  },
+  {
+    "id": "mqh232v19q0n",
+    "titulo": "Blue box",
+    "tipo": "manga",
+    "generos": [
+      "Romance"
+    ],
+    "rating": "5",
+    "sinopsis": "un chico deportista que entrena en el gimnasio todas las mañanas y se enamora en secreto de su senpai del equipo de baloncesto.",
+    "badge": "end",
+    "universo": null,
+    "orden": 1,
+    "cover": "covers/mqh232v19q0n_m.jpg",
+    "capitulos": [
+      {
+        "numero": 1,
+        "titulo": "Oneshot",
+        "paginas": []
+      }
+    ],
+    "creado": "2026-06-16T19:49:40.215Z"
+  }
+]
