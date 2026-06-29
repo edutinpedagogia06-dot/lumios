@@ -1,181 +1,135 @@
-const GCS = "https://raw.githubusercontent.com/" + CFG.gh.user + "/" + CFG.gh.repo + "/" + CFG.gh.branch + "/";
+/* ============================================
+   LUMIOS — github.js
+   Carga datos desde GitHub y resuelve imágenes
+   de Google Drive (IDs de carpeta o de archivo)
+   ============================================ */
 
-// ── Token: se pide UNA vez por sesión (pestaña abierta), nunca se guarda en disco ──
-let _ghToken = null;
-function getToken(){
-  if(!_ghToken){
-    _ghToken = window.prompt("Pega tu token de GitHub para publicar:");
-    if(!_ghToken) throw new Error("Token requerido");
-  }
-  return _ghToken;
+const REPO_BASE = "https://raw.githubusercontent.com/edutinpedagogia06-dot/lumios/main/";
+const GDRIVE_API_KEY = "AIzaSyDn3H2IY8dqvQjPJG-IaMTNQL7J8lFUHZM";
+
+// Cache en memoria para no re-pedir JSON varias veces
+const _cache = {};
+
+async function fetchJSON(file) {
+  if (_cache[file]) return _cache[file];
+  const r = await fetch(REPO_BASE + file);
+  if (!r.ok) throw new Error("No se pudo cargar " + file);
+  const data = await r.json();
+  _cache[file] = data;
+  return data;
 }
-function authHeaders(){
-  return {
-    "Authorization": "Bearer " + getToken(),
-    "Accept": "application/vnd.github+json",
-    "User-Agent": "lumios-admin"
-  };
+
+/* --------- URLs de imagen --------- */
+
+/**
+ * Dado un ID (de archivo o carpeta de Drive), devuelve una URL de imagen directa.
+ * Si es un archivo: usa el proxy de Drive.
+ * Si es una carpeta: lista los archivos de la carpeta (API Drive) y devuelve la URL del primero.
+ * Para coverUrl solo necesitamos la primera imagen, así que resolvemos como cover.
+ */
+function coverUrl(id) {
+  if (!id) return "";
+  // Siempre usamos el proxy de Drive — funciona para IDs de archivo
+  return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
 }
 
-// ── Acceso a GitHub: lectura pública (sin token) + escritura (con token) ──
-const GH = {
-  // Cualquier visitante puede leer, el repo es público, no necesita token
-  async readJSON(path){
-    try{
-      const r = await fetch(`${GCS}${path}?t=${Date.now()}`);
-      if(!r.ok) return { data: [], sha: null };
-      const data = await r.json();
-      return { data, sha: null };
-    }catch(e){ return { data: [], sha: null }; }
-  },
-
-  // Solo se usa al publicar/guardar: aquí es donde se pide el token
-  async writeJSON(path, data){
-    try{
-      const headers = authHeaders();
-      const apiUrl = `https://api.github.com/repos/${CFG.gh.user}/${CFG.gh.repo}/contents/${path}`;
-      let sha = null;
-      const cur = await fetch(`${apiUrl}?ref=${CFG.gh.branch}`, { headers });
-      if(cur.ok){ const f = await cur.json(); sha = f.sha; }
-      const body = {
-        message: `lumios: update ${path}`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-        branch: CFG.gh.branch
-      };
-      if(sha) body.sha = sha;
-      const r = await fetch(apiUrl, {
-        method: "PUT",
-        headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      });
-      if(r.status === 401){ _ghToken = null; }
-      return r.ok;
-    }catch(e){ return false; }
-  },
-
-  async uploadImage(path, base64data){
-    try{
-      const headers = authHeaders();
-      const apiUrl = `https://api.github.com/repos/${CFG.gh.user}/${CFG.gh.repo}/contents/${path}`;
-      let sha = null;
-      const cur = await fetch(`${apiUrl}?ref=${CFG.gh.branch}`, { headers });
-      if(cur.ok){ const f = await cur.json(); sha = f.sha; }
-      const body = { message: `lumios: upload ${path}`, content: base64data, branch: CFG.gh.branch };
-      if(sha) body.sha = sha;
-      const r = await fetch(apiUrl, {
-        method: "PUT",
-        headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      });
-      if(!r.ok){ if(r.status===401) _ghToken=null; return null; }
-      const res = await r.json();
-      return res.content ? res.content.download_url : null;
-    }catch(e){ return null; }
-  },
-
-  async getSHA(path){
-    try{
-      const headers = authHeaders();
-      const r = await fetch(`https://api.github.com/repos/${CFG.gh.user}/${CFG.gh.repo}/contents/${path}?ref=${CFG.gh.branch}`, { headers });
-      if(!r.ok) return null;
-      const f = await r.json();
-      return f.sha || null;
-    }catch(e){ return null; }
-  },
-
-  async deleteFile(path){
-    try{
-      const headers = authHeaders();
-      const apiUrl = `https://api.github.com/repos/${CFG.gh.user}/${CFG.gh.repo}/contents/${path}`;
-      const cur = await fetch(`${apiUrl}?ref=${CFG.gh.branch}`, { headers });
-      if(!cur.ok) return false;
-      const f = await cur.json();
-      const r = await fetch(apiUrl, {
-        method: "DELETE",
-        headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify({ message: `lumios: delete ${path}`, sha: f.sha, branch: CFG.gh.branch })
-      });
-      return r.ok;
-    }catch(e){ return false; }
+/**
+ * Obtiene las páginas de un capítulo.
+ * - Si cap.paginas es un array de IDs de archivo → los usa directamente
+ * - Si cap.carpeta es un ID de carpeta → lista archivos de Drive ordenados
+ */
+async function resolvePages(cap) {
+  // Caso 1: ya tiene array de IDs de imagen
+  if (cap.paginas && Array.isArray(cap.paginas) && cap.paginas.length > 0) {
+    return cap.paginas.map(id => ({
+      id,
+      url: `https://drive.google.com/uc?export=view&id=${id}`
+    }));
   }
-};
 
+  // Caso 2: tiene ID de carpeta
+  const folderId = cap.carpeta || cap.folder;
+  if (!folderId) return [];
+
+  try {
+    const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType+contains+'image/'&orderBy=name&fields=files(id,name)&key=${GDRIVE_API_KEY}&pageSize=200`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error("Drive API error " + r.status);
+    const data = await r.json();
+    const files = (data.files || []).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+    return files.map(f => ({
+      id: f.id,
+      name: f.name,
+      url: `https://drive.google.com/uc?export=view&id=${f.id}`
+    }));
+  } catch (e) {
+    console.error("Error listando carpeta Drive:", e);
+    return [];
+  }
+}
+
+/* --------- DB: acceso a los JSON --------- */
 const DB = {
-  async getManga()     { return GH.readJSON("manga.json"); },
-  async getAnime()     { return GH.readJSON("anime.json"); },
-  async getPeliculas() { return GH.readJSON("peliculas.json"); },
-  async getSite()      { return GH.readJSON("site.json"); },
-  async saveManga(d,s)     { return GH.writeJSON("manga.json", d, s); },
-  async saveAnime(d,s)     { return GH.writeJSON("anime.json", d, s); },
-  async savePeliculas(d,s) { return GH.writeJSON("peliculas.json", d, s); },
-  async saveSite(d,s)      { return GH.writeJSON("site.json", d, s); },
-  genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+  async getManga()     { return { data: await fetchJSON("manga.json") }; },
+  async getAnime()     { return { data: await fetchJSON("anime.json") }; },
+  async getPeliculas() { return { data: await fetchJSON("peliculas.json") }; },
+  async getSite()      { return { data: await fetchJSON("site.json") }; },
 };
 
+/* --------- Tema del sitio --------- */
 async function applyTheme() {
   try {
-    const { data } = await DB.getSite();
-    if (!data || Array.isArray(data)) return data;
-    const root = document.documentElement.style;
-    if (data.colorRed)  root.setProperty("--red", data.colorRed);
-    if (data.colorRed2) root.setProperty("--red2", data.colorRed2);
-    if (data.colorBg)   root.setProperty("--bg", data.colorBg);
-    if (data.colorBg2)  root.setProperty("--bg2", data.colorBg2);
-    if (data.colorText) root.setProperty("--text", data.colorText);
-    return data;
-  } catch(e) { return null; }
-}
-applyTheme();
-
-function coverUrl(c) { return c ? GCS + c : ""; }
-
-// Busca todos los títulos (manga, anime, película) que comparten el mismo "universo"
-async function getUniverseItems(universo) {
-  if (!universo) return [];
-  const [{data:manga},{data:anime},{data:pelis}] = await Promise.all([DB.getManga(),DB.getAnime(),DB.getPeliculas()]);
-  const items = [
-    ...manga.filter(m=>m.universo===universo).map(m=>({...m,_type:"manga",_link:`leer.html?id=${m.id}`})),
-    ...anime.filter(a=>a.universo===universo).map(a=>({...a,_type:"anime",_link:`ver-anime.html?id=${a.id}`})),
-    ...pelis.filter(p=>p.universo===universo).map(p=>({...p,_type:"pelicula",_link:`ver-pelicula.html?id=${p.id}`}))
-  ];
-  items.sort((a,b)=>(a.orden||999)-(b.orden||999));
-  return items;
+    const { data: site } = await DB.getSite();
+    if (!site) return null;
+    const root = document.documentElement;
+    if (site.colorPrimary)  root.style.setProperty("--indigo",        site.colorPrimary);
+    if (site.colorBright)   root.style.setProperty("--indigo-bright",  site.colorBright);
+    if (site.colorDark)     root.style.setProperty("--indigo-dark",    site.colorDark);
+    return site;
+  } catch { return null; }
 }
 
-// Renderiza la sección "Más de este universo" con línea de tiempo
+/* --------- Universo / crossover --------- */
+async function getUniverseItems(universoId) {
+  try {
+    const [{ data: manga }, { data: anime }, { data: pelis }] = await Promise.all([
+      DB.getManga(), DB.getAnime(), DB.getPeliculas()
+    ]);
+    return [...manga, ...anime, ...pelis].filter(
+      item => item.universo === universoId
+    );
+  } catch { return []; }
+}
+
 function renderUniverseSection(items, currentId) {
   if (!items || items.length < 2) return "";
-  const rows = items.map(it => {
-    const img = coverUrl(it.cover);
-    const isCurrent = it.id === currentId;
-    return `
-      <div class="timeline-item ${isCurrent?'current':''}" onclick="${isCurrent?'':`location.href='${it._link}'`}">
-        <div class="timeline-thumb">${img?`<img src="${img}" alt="${it.titulo}" loading="lazy">`:(it._type==="manga"?"📖":it._type==="anime"?"🎬":"🎥")}</div>
-        <div class="timeline-info">
-          <div class="timeline-order">${it.orden?`Parte ${it.orden}`:""}</div>
-          <div class="timeline-name">${it.titulo}</div>
-          <div class="timeline-type">${it._type}</div>
-        </div>
-        ${isCurrent?'<span class="timeline-current-badge">Viendo</span>':''}
-      </div>`;
-  }).join("");
   return `
-    <div class="universe-section">
-      <div class="universe-title"><i class="ti ti-affiliate"></i> Más de este universo</div>
-      <div class="timeline">${rows}</div>
-    </div>`;
+  <div class="universe-section">
+    <div class="universe-title">✦ Mismo universo</div>
+    <div class="universe-grid">
+      ${items.map(item => {
+        const isCurrent = item.id === currentId;
+        const img = coverUrl(item.cover);
+        const href = item.tipo === "anime"    ? `ver-anime.html?id=${item.id}`
+                   : item.tipo === "pelicula" ? `ver-pelicula.html?id=${item.id}`
+                   :                            `leer.html?id=${item.id}`;
+        return `<div class="universe-item ${isCurrent ? "current" : ""}" onclick="location.href='${href}'">
+          <div class="universe-item-img">${img ? `<img src="${img}" alt="${item.titulo}" loading="lazy">` : "📖"}</div>
+          <div class="universe-item-name">${item.titulo}</div>
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
 }
 
-// Transición de salida cinematográfica al navegar
-function lumiosGo(url) {
-  document.body.classList.add("page-exit");
-  setTimeout(() => location.href = url, 220);
-}
-
-function showToast(msg, type) {
-  let t = document.getElementById("toast");
-  if (!t) { t = document.createElement("div"); t.id = "toast"; t.className = "toast"; document.body.appendChild(t); }
+/* --------- Toast --------- */
+function showToast(msg, ms = 2500) {
+  const t = document.getElementById("toast");
+  if (!t) return;
   t.textContent = msg;
-  t.className = `toast ${type === "error" ? "error" : ""} show`;
-  setTimeout(() => t.classList.remove("show"), 3200);
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), ms);
 }
+
+/* --------- GCS helper (por si hay imágenes en otro storage) --------- */
+const GCS = "";
