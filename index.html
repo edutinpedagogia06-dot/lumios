@@ -11,7 +11,10 @@
 <body>
 
 <nav class="navbar">
-  <div class="logo" id="logoSecret" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem"><img src="logo12.png" alt="" style="width:32px;height:32px;border-radius:6px" onclick="logoClick(event)"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="logo" id="logoSecret" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem">
+    <img src="logo12.png" alt="" onclick="logoClick(event)">
+    <a href="index.html">LUM<em>IO</em>S</a>
+  </div>
   <div class="nav-links">
     <button class="nav-link active" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
     <button class="nav-link" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
@@ -21,19 +24,19 @@
   <div class="nav-right">
     <div class="search-wrap">
       <i class="ti ti-search search-icon"></i>
-      <input class="search-input" id="searchInput" placeholder="Buscar..." type="text" onkeydown="if(event.key==='Enter'){const q=this.value.trim();if(q)location.href='buscar.html?q='+encodeURIComponent(q)}">
+      <input class="search-input" id="searchInput" placeholder="Buscar..." type="text"
+        onkeydown="if(event.key==='Enter'){const q=this.value.trim();if(q)location.href='buscar.html?q='+encodeURIComponent(q)}">
     </div>
-    
   </div>
 </nav>
+
 <div class="mobile-nav">
   <a href="index.html" class="active"><i class="ti ti-home"></i>Inicio</a>
-  <a href="manga.html" class=""><i class="ti ti-book"></i>Manga</a>
-  <a href="anime.html" class=""><i class="ti ti-device-tv"></i>Anime</a>
-  <a href="peliculas.html" class=""><i class="ti ti-movie"></i>Pelis</a>
-  <a href="buscar.html" class=""><i class="ti ti-search"></i>Buscar</a>
+  <a href="manga.html"><i class="ti ti-book"></i>Manga</a>
+  <a href="anime.html"><i class="ti ti-device-tv"></i>Anime</a>
+  <a href="peliculas.html"><i class="ti ti-movie"></i>Pelis</a>
+  <a href="buscar.html"><i class="ti ti-search"></i>Buscar</a>
 </div>
-
 
 <section class="hero" id="heroSection">
   <div class="hero-eyebrow">✦ Bienvenido a Lumios ✦</div>
@@ -44,8 +47,12 @@
   </h1>
   <p id="heroDesc">Manga, manhwa, anime y películas. Sin límites, sin interrupciones. Solo tú y las historias que amas.</p>
   <div class="hero-btns">
-    <button class="btn btn-primary" id="heroBtn1" onclick="location.href='manga.html'"><i class="ti ti-book"></i> <span>Explorar Manga</span></button>
-    <button class="btn btn-outline" id="heroBtn2" onclick="location.href='anime.html'"><i class="ti ti-player-play"></i> <span>Ver Anime</span></button>
+    <button class="btn btn-primary" id="heroBtn1" onclick="location.href='manga.html'">
+      <i class="ti ti-book"></i> <span>Explorar Manga</span>
+    </button>
+    <button class="btn btn-outline" id="heroBtn2" onclick="location.href='anime.html'">
+      <i class="ti ti-player-play"></i> <span>Ver Anime</span>
+    </button>
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-num" id="statManga">—</div><div class="stat-label">Mangas</div></div>
@@ -62,7 +69,9 @@
       <h2 class="featured-title" id="featuredTitle"></h2>
       <p class="featured-desc" id="featuredDesc"></p>
       <div class="genre-tags" id="featuredTags"></div>
-      <button class="btn btn-primary" id="featuredBtn"><i class="ti ti-book"></i> Leer ahora</button>
+      <div style="margin-top:1.25rem">
+        <button class="btn btn-primary" id="featuredBtn"><i class="ti ti-book"></i> Leer ahora</button>
+      </div>
     </div>
   </div>
 </section>
@@ -105,6 +114,7 @@
   <div class="footer-logo">LUM<em>IO</em>S</div>
   <p>Tu universo de contenido · Hecho con pasión ♥</p>
 </footer>
+
 <div class="toast" id="toast"></div>
 
 <script src="config.js"></script>
@@ -114,66 +124,98 @@ function mangaCard(m) {
   const img = coverUrl(m.cover);
   const badge = m.badge ? `<span class="card-badge badge-${m.badge}">${m.badge}</span>` : "";
   return `<div class="card" onclick="location.href='leer.html?id=${m.id}'">
-    <div class="card-cover g1">${img?`<img src="${img}" alt="${m.titulo}" loading="lazy">`:"📖"}${badge}</div>
-    <div class="card-info"><div class="card-title">${m.titulo}</div>
-    <div class="card-meta"><span class="star">★</span> ${m.rating||"—"} · Cap. ${(m.capitulos||[]).length}</div></div>
+    <div class="card-cover g1">${img ? `<img src="${img}" alt="${m.titulo}" loading="lazy">` : "📖"}${badge}</div>
+    <div class="card-info">
+      <div class="card-title">${m.titulo}</div>
+      <div class="card-meta"><span class="star">★</span> ${m.rating || "—"} · Cap. ${(m.capitulos || []).length}</div>
+    </div>
   </div>`;
 }
+
 function videoCard(a, page) {
   const img = coverUrl(a.cover);
-  const link = page==="anime" ? `ver-anime.html?id=${a.id}` : `ver-pelicula.html?id=${a.id}`;
+  const link = page === "anime" ? `ver-anime.html?id=${a.id}` : `ver-pelicula.html?id=${a.id}`;
   return `<div class="video-card" onclick="location.href='${link}'">
-    <div class="video-thumb g2">${img?`<img src="${img}" alt="${a.titulo}" loading="lazy">`:"🎬"}
+    <div class="video-thumb g2">
+      ${img ? `<img src="${img}" alt="${a.titulo}" loading="lazy">` : "🎬"}
       <div class="play-overlay"><div class="play-btn"><i class="ti ti-player-play"></i></div></div>
     </div>
-    <div class="video-info"><div class="video-title">${a.titulo}</div>
-    <div class="video-sub">${a.genero||""}</div></div>
+    <div class="video-info">
+      <div class="video-title">${a.titulo}</div>
+      <div class="video-sub">${a.genero || ""}</div>
+    </div>
   </div>`;
 }
+
 async function loadSiteConfig() {
   const site = await applyTheme();
   if (!site) return;
   if (site.heroTitle1) document.getElementById("heroT1").textContent = site.heroTitle1;
   if (site.heroTitle2) document.getElementById("heroT2").textContent = site.heroTitle2;
   if (site.heroTitle3) document.getElementById("heroT3").textContent = site.heroTitle3;
-  if (site.heroDesc) document.getElementById("heroDesc").textContent = site.heroDesc;
-  if (site.heroBtn1) document.querySelector("#heroBtn1 span").textContent = site.heroBtn1;
-  if (site.heroBtn2) document.querySelector("#heroBtn2 span").textContent = site.heroBtn2;
+  if (site.heroDesc)   document.getElementById("heroDesc").textContent = site.heroDesc;
+  if (site.heroBtn1)   document.querySelector("#heroBtn1 span").textContent = site.heroBtn1;
+  if (site.heroBtn2)   document.querySelector("#heroBtn2 span").textContent = site.heroBtn2;
   if (site.heroImage) {
     const hero = document.getElementById("heroSection");
-    hero.style.backgroundImage = `linear-gradient(rgba(10,10,12,0.75),rgba(10,10,12,0.92)), url('${GCS}${site.heroImage}')`;
-    hero.style.backgroundSize = "cover";
+    hero.style.backgroundImage = `linear-gradient(rgba(8,9,14,0.75),rgba(8,9,14,0.95)), url('${site.heroImage}')`;
+    hero.style.backgroundSize     = "cover";
     hero.style.backgroundPosition = "center";
   }
 }
 
 async function loadHome() {
-  const [{data:manga},{data:anime},{data:pelis}] = await Promise.all([DB.getManga(),DB.getAnime(),DB.getPeliculas()]);
+  const [{ data: manga }, { data: anime }, { data: pelis }] = await Promise.all([
+    DB.getManga(), DB.getAnime(), DB.getPeliculas()
+  ]);
+
   // Manga
   const mg = document.getElementById("mangaGrid");
-  mg.innerHTML = manga.length ? manga.slice(0,6).map(mangaCard).join("") : `<div class="empty"><span>📖</span><p>Sin manga publicado aún.</p></div>`;
+  mg.innerHTML = manga.length
+    ? manga.slice(0, 6).map(mangaCard).join("")
+    : `<div class="empty"><span>📖</span><p>Sin manga publicado aún.</p></div>`;
   document.getElementById("statManga").textContent = manga.length;
+
   if (manga.length) {
     const f = manga[0];
     document.getElementById("featuredTitle").textContent = f.titulo;
-    document.getElementById("featuredDesc").textContent = f.sinopsis||"";
-    if (f.cover) document.getElementById("featuredCover").innerHTML = `<img src="${coverUrl(f.cover)}" alt="${f.titulo}">`;
-    document.getElementById("featuredTags").innerHTML = (f.generos||[]).map(g=>`<span class="genre-tag">${g}</span>`).join("");
-    document.getElementById("featuredBtn").onclick = () => location.href = `leer.html?id=${f.id}`;
+    document.getElementById("featuredDesc").textContent  = f.sinopsis || "";
+    if (f.cover) document.getElementById("featuredCover").innerHTML =
+      `<img src="${coverUrl(f.cover)}" alt="${f.titulo}">`;
+    document.getElementById("featuredTags").innerHTML =
+      (f.generos || []).map(g => `<span class="genre-tag">${g}</span>`).join("");
+    document.getElementById("featuredBtn").onclick = () =>
+      location.href = `leer.html?id=${f.id}`;
     document.getElementById("featuredSection").style.display = "";
   }
+
   // Anime
   const ag = document.getElementById("animeGrid");
-  ag.innerHTML = anime.length ? anime.slice(0,4).map(a=>videoCard(a,"anime")).join("") : `<div class="empty"><span>🎬</span><p>Sin anime publicado aún.</p></div>`;
+  ag.innerHTML = anime.length
+    ? anime.slice(0, 4).map(a => videoCard(a, "anime")).join("")
+    : `<div class="empty"><span>🎬</span><p>Sin anime publicado aún.</p></div>`;
   document.getElementById("statAnime").textContent = anime.length;
+
   // Pelis
   const pg = document.getElementById("pelisGrid");
-  pg.innerHTML = pelis.length ? pelis.slice(0,4).map(p=>videoCard(p,"pelicula")).join("") : `<div class="empty"><span>🎥</span><p>Sin películas publicadas aún.</p></div>`;
+  pg.innerHTML = pelis.length
+    ? pelis.slice(0, 4).map(p => videoCard(p, "pelicula")).join("")
+    : `<div class="empty"><span>🎥</span><p>Sin películas publicadas aún.</p></div>`;
   document.getElementById("statPelis").textContent = pelis.length;
 }
+
 loadSiteConfig();
 loadHome();
 </script>
-<script>let logoClicks=0,logoTimer=null;function logoClick(e){e.preventDefault();e.stopPropagation();logoClicks++;clearTimeout(logoTimer);if(logoClicks>=3){logoClicks=0;location.href="admin.html";}logoTimer=setTimeout(()=>logoClicks=0,800);}</script>
+<script>
+let logoClicks = 0, logoTimer = null;
+function logoClick(e) {
+  e.preventDefault(); e.stopPropagation();
+  logoClicks++;
+  clearTimeout(logoTimer);
+  if (logoClicks >= 3) { logoClicks = 0; location.href = "admin.html"; }
+  logoTimer = setTimeout(() => logoClicks = 0, 800);
+}
+</script>
 </body>
 </html>

@@ -10,87 +10,116 @@
 </head>
 <body>
 <nav class="navbar">
-  <div class="logo"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="logo" onclick="logoClick(event)">
+    <img src="logo12.png" alt="">
+    <a href="index.html">LUM<em>IO</em>S</a>
+  </div>
   <div class="nav-links">
     <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
     <button class="nav-link" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
     <button class="nav-link" onclick="location.href='anime.html'"><i class="ti ti-device-tv"></i> Anime</button>
     <button class="nav-link" onclick="location.href='peliculas.html'"><i class="ti ti-movie"></i> Películas</button>
   </div>
-  <div class="nav-right">
-    <div class="search-wrap">
-      <i class="ti ti-search search-icon"></i>
-      <input class="search-input" id="searchInput" placeholder="Buscar..." type="text" onkeydown="if(event.key==='Enter'){const q=this.value.trim();if(q)location.href='buscar.html?q='+encodeURIComponent(q)}">
-    </div>
-  </div>
+  <div class="nav-right"></div>
 </nav>
 <div class="mobile-nav">
-  <a href="index.html" class=""><i class="ti ti-home"></i>Inicio</a>
-  <a href="manga.html" class=""><i class="ti ti-book"></i>Manga</a>
-  <a href="anime.html" class=""><i class="ti ti-device-tv"></i>Anime</a>
-  <a href="peliculas.html" class=""><i class="ti ti-movie"></i>Pelis</a>
+  <a href="index.html"><i class="ti ti-home"></i>Inicio</a>
+  <a href="manga.html"><i class="ti ti-book"></i>Manga</a>
+  <a href="anime.html"><i class="ti ti-device-tv"></i>Anime</a>
+  <a href="peliculas.html"><i class="ti ti-movie"></i>Pelis</a>
   <a href="buscar.html" class="active"><i class="ti ti-search"></i>Buscar</a>
 </div>
 
-<div class="section">
-  <div style="margin-bottom:2rem">
-    <h2 style="font-size:1.4rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:0.4rem">
-      Resultados: <span style="color:var(--red)" id="queryLabel"></span>
-    </h2>
-    <p style="color:var(--text3);font-size:0.85rem" id="countLabel">Buscando...</p>
+<div class="search-hero">
+  <h1>Buscar</h1>
+  <div class="search-big">
+    <i class="ti ti-search"></i>
+    <input id="q" type="text" placeholder="Buscar manga, anime, película..." autofocus>
   </div>
-  <div class="tabs">
-    <button class="tab active" onclick="setTab(this,'todos')">Todos</button>
-    <button class="tab" onclick="setTab(this,'manga')">Manga</button>
-    <button class="tab" onclick="setTab(this,'anime')">Anime</button>
-    <button class="tab" onclick="setTab(this,'pelicula')">Películas</button>
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="setFilter(this,'todo')">Todo</button>
+    <button class="filter-tab" onclick="setFilter(this,'manga')">Manga</button>
+    <button class="filter-tab" onclick="setFilter(this,'anime')">Anime</button>
+    <button class="filter-tab" onclick="setFilter(this,'pelicula')">Películas</button>
   </div>
-  <div id="results"><div class="loading"><div class="spinner"></div><br>Buscando...</div></div>
 </div>
+
+<div class="section" style="padding-top:0">
+  <div id="resultLabel" style="font-size:.8rem;color:var(--tx3);margin-bottom:1rem"></div>
+  <div id="results" class="cards-grid"></div>
+</div>
+
 <footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
 <script src="github.js"></script>
 <script>
+let allItems = [], filter = "todo";
+const input = document.getElementById("q");
 const params = new URLSearchParams(location.search);
-const query = params.get("q")||"";
-let allResults=[], currentTab="todos";
-document.getElementById("searchInput").value = query;
-document.getElementById("queryLabel").textContent = `"${query}"`;
+if (params.get("q")) input.value = params.get("q");
 
-function render() {
-  let items = currentTab==="todos" ? allResults : allResults.filter(r=>r._type===currentTab);
-  document.getElementById("countLabel").textContent = `${items.length} resultado${items.length!==1?"s":""}`;
-  if (!items.length) { document.getElementById("results").innerHTML=`<div class="empty"><span>🔍</span><p>Sin resultados para "${query}".</p></div>`; return; }
-  const manga=items.filter(r=>r._type==="manga");
-  const anime=items.filter(r=>r._type==="anime");
-  const pelis=items.filter(r=>r._type==="pelicula");
-  let html="";
-  if(manga.length) html+=`<div class="section-title" style="margin-bottom:1rem">Manga</div><div class="cards-grid" style="margin-bottom:2rem">${manga.map(m=>{
-    const img=coverUrl(m.cover);
-    return `<div class="card" onclick="location.href='leer.html?id=${m.id}'"><div class="card-cover g1">${img?`<img src="${img}" alt="${m.titulo}" loading="lazy">`:"📖"}</div><div class="card-info"><div class="card-title">${m.titulo}</div><div class="card-meta"><span class="star">★</span>${m.rating||"—"}</div></div></div>`;
-  }).join("")}</div>`;
-  if(anime.length) html+=`<div class="section-title" style="margin-bottom:1rem">Anime</div><div class="video-grid" style="margin-bottom:2rem">${anime.map(a=>{
-    const img=coverUrl(a.cover);
-    return `<div class="video-card" onclick="location.href='ver-anime.html?id=${a.id}'"><div class="video-thumb g2">${img?`<img src="${img}" loading="lazy">`:"🎬"}<div class="play-overlay"><div class="play-btn"><i class="ti ti-player-play"></i></div></div></div><div class="video-info"><div class="video-title">${a.titulo}</div><div class="video-sub">${a.genero||""}</div></div></div>`;
-  }).join("")}</div>`;
-  if(pelis.length) html+=`<div class="section-title" style="margin-bottom:1rem">Películas</div><div class="video-grid">${pelis.map(p=>{
-    const img=coverUrl(p.cover);
-    return `<div class="video-card" onclick="location.href='ver-pelicula.html?id=${p.id}'"><div class="video-thumb g1">${img?`<img src="${img}" loading="lazy">`:"🎥"}<div class="play-overlay"><div class="play-btn"><i class="ti ti-player-play"></i></div></div></div><div class="video-info"><div class="video-title">${p.titulo}</div><div class="video-sub">${p.genero||""}</div></div></div>`;
-  }).join("")}</div>`;
-  document.getElementById("results").innerHTML = html;
+function setFilter(btn, f) {
+  document.querySelectorAll(".filter-tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  filter = f;
+  search();
 }
-function setTab(btn,tab){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));btn.classList.add("active");currentTab=tab;render();}
+
+function resultCard(item) {
+  const img = coverUrl(item.cover);
+  const isVideo = item._tipo === "anime" || item._tipo === "pelicula";
+  const href = item._tipo === "manga" ? `leer.html?id=${item.id}` : item._tipo === "anime" ? `ver-anime.html?id=${item.id}` : `ver-pelicula.html?id=${item.id}`;
+  if (isVideo) {
+    return `<div class="video-card" onclick="location.href='${href}'">
+      <div class="video-thumb g2">${img?`<img src="${img}" alt="${item.titulo}" loading="lazy">`:"🎬"}
+      <div class="play-overlay"><div class="play-btn"><i class="ti ti-player-play"></i></div></div></div>
+      <div class="video-info"><div class="video-title">${item.titulo}</div>
+      <div class="video-sub">${item._tipo==="anime"?"Anime":"Película"} · ${item.genero||""}</div></div></div>`;
+  }
+  return `<div class="card" onclick="location.href='${href}'">
+    <div class="card-cover g1">${img?`<img src="${img}" alt="${item.titulo}" loading="lazy">`:"📖"}</div>
+    <div class="card-info"><div class="card-title">${item.titulo}</div>
+    <div class="card-meta">Manga · ${(item.capitulos||[]).length} caps.</div></div></div>`;
+}
+
+function search() {
+  const q = input.value.trim().toLowerCase();
+  let items = allItems;
+  if (filter !== "todo") items = items.filter(i => i._tipo === filter);
+  if (q) items = items.filter(i =>
+    i.titulo.toLowerCase().includes(q) ||
+    (i.sinopsis||"").toLowerCase().includes(q) ||
+    (i.generos||[]).some(g => g.toLowerCase().includes(q))
+  );
+  const label = document.getElementById("resultLabel");
+  label.textContent = q ? `${items.length} resultado${items.length!==1?"s":""} para "${input.value.trim()}"` : "";
+  const res = document.getElementById("results");
+  if (!q) { res.innerHTML = `<div class="empty" style="padding:3rem"><span>🔍</span><p>Escribe algo para buscar.</p></div>`; return; }
+  const isMixed = filter === "todo";
+  if (isMixed) {
+    res.className = "cards-grid";
+  } else if (filter === "manga") {
+    res.className = "cards-grid";
+  } else {
+    res.className = "video-grid";
+  }
+  res.innerHTML = items.length ? items.map(resultCard).join("") : `<div class="empty"><span>😕</span><p>No se encontró nada.</p></div>`;
+}
+
 async function load() {
-  const q=query.toLowerCase();
-  const [{data:manga},{data:anime},{data:pelis}]=await Promise.all([DB.getManga(),DB.getAnime(),DB.getPeliculas()]);
-  allResults=[
-    ...manga.filter(m=>m.titulo.toLowerCase().includes(q)||(m.sinopsis||"").toLowerCase().includes(q)).map(m=>({...m,_type:"manga"})),
-    ...anime.filter(a=>a.titulo.toLowerCase().includes(q)||(a.sinopsis||"").toLowerCase().includes(q)).map(a=>({...a,_type:"anime"})),
-    ...pelis.filter(p=>p.titulo.toLowerCase().includes(q)||(p.sinopsis||"").toLowerCase().includes(q)).map(p=>({...p,_type:"pelicula"}))
-  ];
-  render();
+  try {
+    const [{data:manga},{data:anime},{data:pelis}] = await Promise.all([DB.getManga(),DB.getAnime(),DB.getPeliculas()]);
+    allItems = [
+      ...manga.map(m => ({...m, _tipo:"manga"})),
+      ...anime.map(a => ({...a, _tipo:"anime"})),
+      ...pelis.map(p => ({...p, _tipo:"pelicula"}))
+    ];
+    search();
+  } catch(e) { console.error(e); }
 }
+
+input.addEventListener("input", search);
 load();
 </script>
 </body>

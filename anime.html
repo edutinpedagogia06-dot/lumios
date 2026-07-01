@@ -10,7 +10,10 @@
 </head>
 <body>
 <nav class="navbar">
-  <div class="logo" id="logoSecret" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem"><img src="logo12.png" alt="" style="width:32px;height:32px;border-radius:6px" onclick="logoClick(event)"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="logo" onclick="logoClick(event)">
+    <img src="logo12.png" alt="">
+    <a href="index.html">LUM<em>IO</em>S</a>
+  </div>
   <div class="nav-links">
     <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
     <button class="nav-link" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
@@ -22,18 +25,21 @@
       <i class="ti ti-search search-icon"></i>
       <input class="search-input" id="searchInput" placeholder="Buscar anime..." type="text" oninput="renderGrid()">
     </div>
-    
   </div>
 </nav>
 <div class="mobile-nav">
-  <a href="index.html" class=""><i class="ti ti-home"></i>Inicio</a>
-  <a href="manga.html" class=""><i class="ti ti-book"></i>Manga</a>
+  <a href="index.html"><i class="ti ti-home"></i>Inicio</a>
+  <a href="manga.html"><i class="ti ti-book"></i>Manga</a>
   <a href="anime.html" class="active"><i class="ti ti-device-tv"></i>Anime</a>
-  <a href="peliculas.html" class=""><i class="ti ti-movie"></i>Pelis</a>
-  <a href="buscar.html" class=""><i class="ti ti-search"></i>Buscar</a>
+  <a href="peliculas.html"><i class="ti ti-movie"></i>Pelis</a>
+  <a href="buscar.html"><i class="ti ti-search"></i>Buscar</a>
 </div>
 
-<div class="page-head"><h2>Anime</h2><p id="countLabel">Cargando...</p></div>
+<div class="page-head">
+  <h2>Anime</h2>
+  <p id="countLabel">Cargando...</p>
+</div>
+
 <div class="section" style="padding-top:1.5rem">
   <div class="tabs">
     <button class="tab active" onclick="setTab(this,'todos')">Todos</button>
@@ -44,35 +50,51 @@
     <div class="loading"><div class="spinner"></div><br>Cargando...</div>
   </div>
 </div>
+
 <footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
 <script src="github.js"></script>
 <script>
-let allData=[], currentTab="todos";
+let allData = [], currentTab = "todos";
 function cardHTML(a) {
   const img = coverUrl(a.cover);
   return `<div class="video-card" onclick="location.href='ver-anime.html?id=${a.id}'">
-    <div class="video-thumb g2">${img?`<img src="${img}" alt="${a.titulo}" loading="lazy">`:"🎬"}
+    <div class="video-thumb g2">
+      ${img?`<img src="${img}" alt="${a.titulo}" loading="lazy">`:"🎬"}
       <div class="play-overlay"><div class="play-btn"><i class="ti ti-player-play"></i></div></div>
     </div>
-    <div class="video-info"><div class="video-title">${a.titulo}</div>
-    <div class="video-sub">${a.episodios||0} eps · ${a.estado||""} · ${a.genero||""}</div></div>
+    <div class="video-info">
+      <div class="video-title">${a.titulo}</div>
+      <div class="video-sub">${a.episodios||0} eps · ${a.estado||""} · ${a.genero||""}</div>
+    </div>
   </div>`;
 }
 function renderGrid() {
   const q = document.getElementById("searchInput").value.toLowerCase();
   let items = allData;
-  if(currentTab==="emision") items=items.filter(a=>a.estado==="En emisión");
-  if(currentTab==="completo") items=items.filter(a=>a.estado==="Completo");
-  if(q) items=items.filter(a=>a.titulo.toLowerCase().includes(q));
+  if (currentTab === "emision") items = items.filter(a => a.estado === "En emisión");
+  if (currentTab === "completo") items = items.filter(a => a.estado === "Completo");
+  if (q) items = items.filter(a => a.titulo.toLowerCase().includes(q));
   document.getElementById("grid").innerHTML = items.length ? items.map(cardHTML).join("") : `<div class="empty"><span>🎬</span><p>No se encontró nada.</p></div>`;
   document.getElementById("countLabel").textContent = `${items.length} anime${items.length!==1?"s":""} disponible${items.length!==1?"s":""}`;
 }
-function setTab(btn,tab){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));btn.classList.add("active");currentTab=tab;renderGrid();}
-async function load(){const{data}=await DB.getAnime();allData=data;renderGrid();}
+function setTab(btn, tab) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  currentTab = tab;
+  renderGrid();
+}
+async function load() {
+  try {
+    const { data } = await DB.getAnime();
+    allData = data;
+    renderGrid();
+  } catch(e) {
+    document.getElementById("grid").innerHTML = `<div class="empty"><span>⚠️</span><p>Error cargando anime.</p></div>`;
+  }
+}
 load();
 </script>
-<script>let logoClicks=0,logoTimer=null;function logoClick(e){e.preventDefault();e.stopPropagation();logoClicks++;clearTimeout(logoTimer);if(logoClicks>=3){logoClicks=0;location.href="admin.html";}logoTimer=setTimeout(()=>logoClicks=0,800);}</script>
 </body>
 </html>

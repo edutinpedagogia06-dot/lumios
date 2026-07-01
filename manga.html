@@ -10,7 +10,10 @@
 </head>
 <body>
 <nav class="navbar">
-  <div class="logo" id="logoSecret" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem"><img src="logo12.png" alt="" style="width:32px;height:32px;border-radius:6px" onclick="logoClick(event)"><a href="index.html">LUM<em>IO</em>S</a></div>
+  <div class="logo" onclick="logoClick(event)">
+    <img src="logo12.png" alt="">
+    <a href="index.html">LUM<em>IO</em>S</a>
+  </div>
   <div class="nav-links">
     <button class="nav-link" onclick="location.href='index.html'"><i class="ti ti-home"></i> Inicio</button>
     <button class="nav-link active" onclick="location.href='manga.html'"><i class="ti ti-book"></i> Manga</button>
@@ -22,21 +25,21 @@
       <i class="ti ti-search search-icon"></i>
       <input class="search-input" id="searchInput" placeholder="Buscar manga..." type="text" oninput="renderGrid()">
     </div>
-    
   </div>
 </nav>
 <div class="mobile-nav">
-  <a href="index.html" class=""><i class="ti ti-home"></i>Inicio</a>
+  <a href="index.html"><i class="ti ti-home"></i>Inicio</a>
   <a href="manga.html" class="active"><i class="ti ti-book"></i>Manga</a>
-  <a href="anime.html" class=""><i class="ti ti-device-tv"></i>Anime</a>
-  <a href="peliculas.html" class=""><i class="ti ti-movie"></i>Pelis</a>
-  <a href="buscar.html" class=""><i class="ti ti-search"></i>Buscar</a>
+  <a href="anime.html"><i class="ti ti-device-tv"></i>Anime</a>
+  <a href="peliculas.html"><i class="ti ti-movie"></i>Pelis</a>
+  <a href="buscar.html"><i class="ti ti-search"></i>Buscar</a>
 </div>
 
 <div class="page-head">
-  <h2>Manga <span style="color:var(--red)">&</span> Manhwa</h2>
+  <h2>Manga <em>&</em> Manhwa</h2>
   <p id="countLabel">Cargando...</p>
 </div>
+
 <div class="section" style="padding-top:1.5rem">
   <div class="tabs">
     <button class="tab active" onclick="setTab(this,'todos')">Todos</button>
@@ -48,6 +51,7 @@
     <div class="loading"><div class="spinner"></div><br>Cargando...</div>
   </div>
 </div>
+
 <footer><div class="footer-logo">LUM<em>IO</em>S</div><p>Tu universo de contenido · ♥</p></footer>
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
@@ -59,22 +63,36 @@ function cardHTML(m) {
   const badge = m.badge ? `<span class="card-badge badge-${m.badge}">${m.badge}</span>` : "";
   return `<div class="card" onclick="location.href='leer.html?id=${m.id}'">
     <div class="card-cover g1">${img?`<img src="${img}" alt="${m.titulo}" loading="lazy">`:"📖"}${badge}</div>
-    <div class="card-info"><div class="card-title">${m.titulo}</div>
-    <div class="card-meta"><span class="star">★</span> ${m.rating||"—"} · ${m.tipo||"manga"}</div></div>
+    <div class="card-info">
+      <div class="card-title">${m.titulo}</div>
+      <div class="card-meta"><span class="star">★</span> ${m.rating||"—"} · ${m.tipo||"manga"}</div>
+    </div>
   </div>`;
 }
 function renderGrid() {
   const q = document.getElementById("searchInput").value.toLowerCase();
-  let items = currentTab==="todos" ? allData : allData.filter(m=>(m.tipo||"manga")===currentTab);
-  if(q) items = items.filter(m=>m.titulo.toLowerCase().includes(q));
+  let items = currentTab === "todos" ? allData : allData.filter(m => (m.tipo||"manga") === currentTab);
+  if (q) items = items.filter(m => m.titulo.toLowerCase().includes(q));
   const grid = document.getElementById("grid");
   grid.innerHTML = items.length ? items.map(cardHTML).join("") : `<div class="empty"><span>📖</span><p>No se encontró nada.</p></div>`;
   document.getElementById("countLabel").textContent = `${items.length} título${items.length!==1?"s":""} disponible${items.length!==1?"s":""}`;
 }
-function setTab(btn,tab){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));btn.classList.add("active");currentTab=tab;renderGrid();}
-async function load(){const{data}=await DB.getManga();allData=data;renderGrid();}
+function setTab(btn, tab) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  currentTab = tab;
+  renderGrid();
+}
+async function load() {
+  try {
+    const { data } = await DB.getManga();
+    allData = data;
+    renderGrid();
+  } catch(e) {
+    document.getElementById("grid").innerHTML = `<div class="empty"><span>⚠️</span><p>Error cargando manga.</p></div>`;
+  }
+}
 load();
 </script>
-<script>let logoClicks=0,logoTimer=null;function logoClick(e){e.preventDefault();e.stopPropagation();logoClicks++;clearTimeout(logoTimer);if(logoClicks>=3){logoClicks=0;location.href="admin.html";}logoTimer=setTimeout(()=>logoClicks=0,800);}</script>
 </body>
 </html>
